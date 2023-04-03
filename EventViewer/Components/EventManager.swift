@@ -28,6 +28,7 @@ public final class EventManager: NSPersistentContainer {
         })
     }
 
+    // сохронение события в БД
     public func capture(_ event: Event) {
         performBackgroundTask({ context in
             let newRecord = DBEvent(context: context)
