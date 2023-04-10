@@ -47,6 +47,26 @@ public final class EventManager: NSPersistentContainer {
             }
         })
     }
+    
+    
+    
+    var allEvent: [NSManagedObject] = []
+    
+    
+    public func getAllEvent() {
+        let request = DBEvent.makeFetchRequest()
+        
+
+        do {
+            allEvent = try viewContext.fetch(request)
+        } catch let error as NSError {
+            print("Coud not fetch \(error), \(error.userInfo)")
+        }
+    }
+    
+    
+    
+    
 
     public func entitiesCount() -> Int {
         do {

@@ -21,11 +21,15 @@ class EventsListViewController: UITableViewController {
     // MARK: - Variables
     
     private let eventManager: EventManager
+    private let dataSource: TableViewDataSourse
+    private let delegate: TableViewDelegate
     
     // MARK: - Lifecycle
     
-    init(eventManager: EventManager) {
+    init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
         self.eventManager = eventManager
+        self.dataSource = dataSourse
+        self.delegate = delegate
         super.init(style: .insetGrouped)
     }
     
@@ -35,7 +39,13 @@ class EventsListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        eventManager.getAllEvent()
         configureUI()
+        bing()
+        
+        
+        print(eventManager.allEvent.count)
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,6 +58,13 @@ class EventsListViewController: UITableViewController {
     private func configureUI() {
         navigationItem.title = "Events List"
         navigationItem.rightBarButtonItem = self.logoutBarButtonItem
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+    }
+    
+    private func bing() {
+        tableView.dataSource = dataSource
+        tableView.delegate = delegate
+        dataSource.test = eventManager
     }
     
     // MARK: - Actions
