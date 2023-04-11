@@ -9,7 +9,13 @@
 import CoreData
 import Foundation
 
-public final class EventManager: NSPersistentContainer {
+protocol EventManagerProtocol {
+    var allEvents: [NSManagedObject] { get set }
+}
+
+public final class EventManager: NSPersistentContainer, EventManagerProtocol {
+    
+    var allEvents: [NSManagedObject] = []
 
     public let queue = DispatchQueue(label: "com.simla.PersistantEventManager", qos: .default)
 
@@ -48,26 +54,17 @@ public final class EventManager: NSPersistentContainer {
         })
     }
     
-    
-    
-    var allEvent: [NSManagedObject] = []
-    
-    
     public func getAllEvent() {
         let request = DBEvent.makeFetchRequest()
-        
-
+        let sort = NSSortDescriptor(key: #keyPath(DBEvent.createdAt), ascending: false)
+        request.sortDescriptors = [sort]
         do {
-            allEvent = try viewContext.fetch(request)
+            allEvents = try viewContext.fetch(request)
         } catch let error as NSError {
             print("Coud not fetch \(error), \(error.userInfo)")
         }
     }
     
-    
-    
-    
-
     public func entitiesCount() -> Int {
         do {
             return try viewContext.count(for: DBEvent.makeFetchRequest())

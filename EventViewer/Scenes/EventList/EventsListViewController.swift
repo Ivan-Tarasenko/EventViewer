@@ -23,6 +23,7 @@ class EventsListViewController: UITableViewController {
     private let eventManager: EventManager
     private let dataSource: TableViewDataSourse
     private let delegate: TableViewDelegate
+    private var viewModel: EventListProtorol!
     
     // MARK: - Lifecycle
     
@@ -43,8 +44,13 @@ class EventsListViewController: UITableViewController {
         configureUI()
         bing()
         
+        viewModel = EventListViewModel()
         
-        print(eventManager.allEvent.count)
+        
+        print(eventManager.allEvents.count)
+//        print(eventManager.lastDateOfEvent("VIEW_SCREEN"))
+//        let test = eventManager.allEvent[0]
+//        print(test.value(forKey: "createdAt"))
         
     }
     
@@ -58,13 +64,13 @@ class EventsListViewController: UITableViewController {
     private func configureUI() {
         navigationItem.title = "Events List"
         navigationItem.rightBarButtonItem = self.logoutBarButtonItem
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
     }
     
     private func bing() {
         tableView.dataSource = dataSource
         tableView.delegate = delegate
-        dataSource.test = eventManager
+//        dataSource.events = viewModel
     }
     
     // MARK: - Actions
