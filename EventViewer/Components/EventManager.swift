@@ -9,15 +9,11 @@
 import CoreData
 import Foundation
 
-protocol EventManagerProtocol {
-    var allEvents: [NSManagedObject] { get set }
-}
-
-public final class EventManager: NSPersistentContainer, EventManagerProtocol {
-    
-    var allEvents: [NSManagedObject] = []
+public final class EventManager: NSPersistentContainer {
 
     public let queue = DispatchQueue(label: "com.simla.PersistantEventManager", qos: .default)
+    
+    private var events: [NSManagedObject] = []
 
     public init() {
         super.init(name: "PersistantEventManagerDB", managedObjectModel: Self.model)
@@ -54,7 +50,9 @@ public final class EventManager: NSPersistentContainer, EventManagerProtocol {
         })
     }
     
-    public func getAllEvent() {
+    public func allEvents() -> [NSManagedObject] {
+        
+        var allEvents: [NSManagedObject] = []
         let request = DBEvent.makeFetchRequest()
         let sort = NSSortDescriptor(key: #keyPath(DBEvent.createdAt), ascending: false)
         request.sortDescriptors = [sort]
@@ -63,6 +61,24 @@ public final class EventManager: NSPersistentContainer, EventManagerProtocol {
         } catch let error as NSError {
             print("Coud not fetch \(error), \(error.userInfo)")
         }
+        
+        events = allEvents
+        
+        return events
+    }
+    
+    public func deleteEvent(index: Int) {
+        
+        let context = viewContext
+        
+        context.delete(events[index])
+        events.remove(at: index)
+
+            do {
+                try context.save()
+            } catch {
+                print("Error:", error.localizedDescription)
+            }
     }
     
     public func entitiesCount() -> Int {

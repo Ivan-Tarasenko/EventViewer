@@ -23,8 +23,7 @@ class EventsListViewController: UITableViewController {
     private let eventManager: EventManager
     private let dataSource: TableViewDataSourse
     private let delegate: TableViewDelegate
-    private var viewModel: EventListProtorol!
-    
+    private var viewModel: EventListProtorol = EventListViewModel()
     // MARK: - Lifecycle
     
     init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
@@ -40,24 +39,28 @@ class EventsListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        eventManager.getAllEvent()
         configureUI()
         bing()
-        
-        viewModel = EventListViewModel()
-        
-        
-        print(eventManager.allEvents.count)
-//        print(eventManager.lastDateOfEvent("VIEW_SCREEN"))
-//        let test = eventManager.allEvent[0]
-//        print(test.value(forKey: "createdAt"))
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        eventManager.capture(.viewScreen("EVENTS_LIST"))
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        eventManager.capture(.viewScreen("EVENTS_LIST"))
+        viewModel.reloadData {
+            self.tableView.reloadData()
+        }
     }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+                if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
+//                    self.fetchNextPage()
+                   
+                }
+            }
     
     // MARK: - Configuration
     
@@ -70,7 +73,7 @@ class EventsListViewController: UITableViewController {
     private func bing() {
         tableView.dataSource = dataSource
         tableView.delegate = delegate
-//        dataSource.events = viewModel
+        dataSource.viewModel = viewModel
     }
     
     // MARK: - Actions
@@ -79,6 +82,13 @@ class EventsListViewController: UITableViewController {
     private func logout() {
         eventManager.capture(.logout)
         let vc = LoginViewController(eventManager: eventManager)
+        
+        vc.onReloadData = {
+            self.viewModel.reloadData {
+                self.tableView.reloadData()
+            }
+        }
+        
         let navVc = UINavigationController(rootViewController: vc)
         present(navVc, animated: true)
     }

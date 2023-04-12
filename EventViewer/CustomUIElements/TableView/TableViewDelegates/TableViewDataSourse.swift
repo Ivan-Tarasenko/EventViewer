@@ -9,27 +9,33 @@ import UIKit
 
 final class TableViewDataSourse: NSObject, UITableViewDataSource {
     
-    var events: EventListProtorol = EventListViewModel()
+    var viewModel: EventListProtorol!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if events.allEvents.isEmpty {
+        if viewModel.allEvents.isEmpty {
             return 1
-//        } else {
-//            return events.allEvents.count
-//        }
+        } else {
+            return viewModel.allEvents.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell else { fatalError("Cell nil") }
         
-//        let eventID = events.allEvents[indexPath.row].value(forKey: "id") as? String ?? "Not Events"
-//        let eventDate = events.allEvents[indexPath.row].value(forKey: "createdAt") as? Date ?? nil
-        
-        cell.titleLabel.text = events.eventID(index: indexPath.row)
-        cell.subtitleLabel.text = events.eventDate(index: indexPath.row)
+        cell.titleLabel.text = viewModel.eventID(index: indexPath.row)
+        cell.subtitleLabel.text = viewModel.eventDate(index: indexPath.row)
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+    
+            viewModel.deleteEvent(index: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .top)
+            tableView.reloadData()
+        }
+      }
     
     
 }

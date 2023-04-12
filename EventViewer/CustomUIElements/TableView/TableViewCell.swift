@@ -15,7 +15,13 @@ final class TableViewCell: UITableViewCell {
     }
     
     let titleLabel = UILabel()
-    let subtitleLabel = UILabel()
+    
+    let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.textColor = .gray
+        return label
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -37,13 +43,13 @@ private extension TableViewCell {
     
     func addConstraints() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(3)
-            make.leading.trailing.equalTo(10)
+            make.top.equalTo(5)
+            make.leading.trailing.equalTo(20)
         }
         
         subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel).offset(27)
-            make.leading.trailing.equalTo(10)
+            make.top.equalTo(titleLabel).offset(30)
+            make.leading.trailing.equalTo(20)
         }
     }
 }
