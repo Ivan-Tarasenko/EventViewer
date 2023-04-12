@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EventsListViewController: UITableViewController {
+class EventsListViewController: UITableViewController, UIScrollViewAccessibilityDelegate {
     
     // MARK: - Outlets
     
@@ -52,6 +52,8 @@ class EventsListViewController: UITableViewController {
         configureUI()
         bing()
         setupSearchController()
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,10 +67,20 @@ class EventsListViewController: UITableViewController {
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
+        print("scroll")
         if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
             //                    self.fetchNextPage()
             
         }
+    }
+    
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            print("last")
+        }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
     }
     
     // MARK: - Configuration
@@ -137,7 +149,9 @@ extension EventsListViewController: UISearchBarDelegate {
         }
         
     }
-    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+       reloadData()
+    }
     private func setupSearchController() {
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self

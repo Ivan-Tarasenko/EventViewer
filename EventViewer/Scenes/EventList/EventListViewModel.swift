@@ -61,9 +61,8 @@ final class EventListViewModel: EventListProtorol {
     
     func search(searchText: String) {
         
-        
         for (index, event) in allEvents.enumerated() where
-        event.value(forKey: KeyProperties.id) as? String == searchText {
+        event.value(forKey: KeyProperties.id) as? String ~= searchText {
             
             let removeItem = allEvents.remove(at: index)
             allEvents.insert(removeItem, at: 0)
