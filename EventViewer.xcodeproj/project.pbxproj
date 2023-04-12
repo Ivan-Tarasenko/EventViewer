@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A6B315E29E4992E0013DB8F /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6B315D29E4992E0013DB8F /* TableViewCell.swift */; };
+		1A6B316029E530070013DB8F /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6B315F29E530070013DB8F /* EventListViewModel.swift */; };
+		1AE1B32B29E32AD100BE523B /* TableViewDataSourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B32A29E32AD100BE523B /* TableViewDataSourse.swift */; };
+		1AE1B32D29E32AE000BE523B /* TableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B32C29E32AE000BE523B /* TableViewDelegate.swift */; };
 		F3CB02E02982E91D0078A0F9 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CB02D62982E91D0078A0F9 /* Event.swift */; };
 		F3CB02E12982E91D0078A0F9 /* EventRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CB02D72982E91D0078A0F9 /* EventRegistry.swift */; };
 		F3CB02E22982E91D0078A0F9 /* DBParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CB02D82982E91D0078A0F9 /* DBParameter.swift */; };
@@ -23,6 +27,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A6B315D29E4992E0013DB8F /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		1A6B315F29E530070013DB8F /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
+		1AE1B32A29E32AD100BE523B /* TableViewDataSourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDataSourse.swift; sourceTree = "<group>"; };
+		1AE1B32C29E32AE000BE523B /* TableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDelegate.swift; sourceTree = "<group>"; };
 		F3CB02C12982E8D50078A0F9 /* EventViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EventViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3CB02CA2982E8D70078A0F9 /* EventViewer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EventViewer.entitlements; sourceTree = "<group>"; };
 		F3CB02D62982E91D0078A0F9 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -52,6 +60,58 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A6B315B29E498E10013DB8F /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				1A6B315D29E4992E0013DB8F /* TableViewCell.swift */,
+				1AE1B32729E32AA900BE523B /* TableViewDelegates */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		1A6B315C29E498F20013DB8F /* CustomUIElements */ = {
+			isa = PBXGroup;
+			children = (
+				1A6B315B29E498E10013DB8F /* TableView */,
+			);
+			path = CustomUIElements;
+			sourceTree = "<group>";
+		};
+		1A6B316129E5300D0013DB8F /* EventList */ = {
+			isa = PBXGroup;
+			children = (
+				F3CB02F52982EC100078A0F9 /* EventsListViewController.swift */,
+				1A6B315F29E530070013DB8F /* EventListViewModel.swift */,
+			);
+			path = EventList;
+			sourceTree = "<group>";
+		};
+		1A6B316229E5302E0013DB8F /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				F3CB02F82982EED00078A0F9 /* LoginViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		1AE1B32529E3294C00BE523B /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				F3CB02F32982EBC60078A0F9 /* SceneDelegate.swift */,
+				F3CB02F12982EBAB0078A0F9 /* AppDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		1AE1B32729E32AA900BE523B /* TableViewDelegates */ = {
+			isa = PBXGroup;
+			children = (
+				1AE1B32A29E32AD100BE523B /* TableViewDataSourse.swift */,
+				1AE1B32C29E32AE000BE523B /* TableViewDelegate.swift */,
+			);
+			path = TableViewDelegates;
+			sourceTree = "<group>";
+		};
 		F3CB02B82982E8D50078A0F9 = {
 			isa = PBXGroup;
 			children = (
@@ -71,13 +131,13 @@
 		F3CB02C32982E8D50078A0F9 /* EventViewer */ = {
 			isa = PBXGroup;
 			children = (
-				F3CB02F12982EBAB0078A0F9 /* AppDelegate.swift */,
-				F3CB02F32982EBC60078A0F9 /* SceneDelegate.swift */,
+				1AE1B32529E3294C00BE523B /* Application */,
 				F3CB02FB2982F1D80078A0F9 /* Resources */,
 				F3CB02EB2982E9B60078A0F9 /* Extensions */,
 				F3CB02E82982E9810078A0F9 /* Entities */,
 				F3CB02D32982E91D0078A0F9 /* Components */,
 				F3CB02FA2982F1B00078A0F9 /* Scenes */,
+				1A6B315C29E498F20013DB8F /* CustomUIElements */,
 			);
 			path = EventViewer;
 			sourceTree = "<group>";
@@ -114,8 +174,8 @@
 		F3CB02FA2982F1B00078A0F9 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				F3CB02F52982EC100078A0F9 /* EventsListViewController.swift */,
-				F3CB02F82982EED00078A0F9 /* LoginViewController.swift */,
+				1A6B316129E5300D0013DB8F /* EventList */,
+				1A6B316229E5302E0013DB8F /* Login */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -203,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A6B315E29E4992E0013DB8F /* TableViewCell.swift in Sources */,
 				F3CB02E62982E91D0078A0F9 /* EventManager.swift in Sources */,
 				F3CB02E72982E91D0078A0F9 /* EventManager+Model.swift in Sources */,
 				F3CB02F92982EED00078A0F9 /* LoginViewController.swift in Sources */,
@@ -211,8 +272,11 @@
 				F3CB02F62982EC100078A0F9 /* EventsListViewController.swift in Sources */,
 				F3CB02F42982EBC60078A0F9 /* SceneDelegate.swift in Sources */,
 				F3CB02E52982E91D0078A0F9 /* DBEvent.swift in Sources */,
+				1AE1B32B29E32AD100BE523B /* TableViewDataSourse.swift in Sources */,
+				1AE1B32D29E32AE000BE523B /* TableViewDelegate.swift in Sources */,
 				F3CB02ED2982E9CD0078A0F9 /* CoreData+Utilities.swift in Sources */,
 				F3CB02E02982E91D0078A0F9 /* Event.swift in Sources */,
+				1A6B316029E530070013DB8F /* EventListViewModel.swift in Sources */,
 				F3CB02E12982E91D0078A0F9 /* EventRegistry.swift in Sources */,
 				F3CB02EA2982E9890078A0F9 /* ParameterSet.swift in Sources */,
 			);

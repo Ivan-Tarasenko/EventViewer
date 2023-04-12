@@ -11,10 +11,14 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let eventManager: EventManager
+    let dataSourse: TableViewDataSourse
+    let delegate: TableViewDelegate
     var window: UIWindow?
     
     override init() {
         self.eventManager = EventManager()
+        self.dataSourse = TableViewDataSourse()
+        self.delegate = TableViewDelegate()
         super.init()
     }
 
@@ -22,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = UINavigationController(
-            rootViewController: EventsListViewController(eventManager: self.eventManager)
+            rootViewController: EventsListViewController(eventManager: eventManager, dataSourse: dataSourse, delegate: delegate)
         )
         self.window = window
         window.makeKeyAndVisible()

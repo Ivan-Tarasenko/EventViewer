@@ -21,11 +21,15 @@ class EventsListViewController: UITableViewController {
     // MARK: - Variables
     
     private let eventManager: EventManager
-    
+    private let dataSource: TableViewDataSourse
+    private let delegate: TableViewDelegate
+    private var viewModel: EventListProtorol = EventListViewModel()
     // MARK: - Lifecycle
     
-    init(eventManager: EventManager) {
+    init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
         self.eventManager = eventManager
+        self.dataSource = dataSourse
+        self.delegate = delegate
         super.init(style: .insetGrouped)
     }
     
@@ -36,18 +40,40 @@ class EventsListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        bing()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        eventManager.capture(.viewScreen("EVENTS_LIST"))
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        eventManager.capture(.viewScreen("EVENTS_LIST"))
+        viewModel.reloadData {
+            self.tableView.reloadData()
+        }
     }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+                if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
+//                    self.fetchNextPage()
+                   
+                }
+            }
     
     // MARK: - Configuration
     
     private func configureUI() {
         navigationItem.title = "Events List"
         navigationItem.rightBarButtonItem = self.logoutBarButtonItem
+        tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
+    }
+    
+    private func bing() {
+        tableView.dataSource = dataSource
+        tableView.delegate = delegate
+        dataSource.viewModel = viewModel
     }
     
     // MARK: - Actions
@@ -56,6 +82,13 @@ class EventsListViewController: UITableViewController {
     private func logout() {
         eventManager.capture(.logout)
         let vc = LoginViewController(eventManager: eventManager)
+        
+        vc.onReloadData = {
+            self.viewModel.reloadData {
+                self.tableView.reloadData()
+            }
+        }
+        
         let navVc = UINavigationController(rootViewController: vc)
         present(navVc, animated: true)
     }

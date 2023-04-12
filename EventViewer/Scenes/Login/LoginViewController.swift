@@ -25,6 +25,7 @@ class LoginViewController: UIViewController {
     // MARK: - Variables
     
     private let eventManager: EventManager
+    var onReloadData: (() -> Void)?
     
     // MARK: - Lifecycle
     
@@ -42,6 +43,11 @@ class LoginViewController: UIViewController {
         configureUI()
         configureSubviews()
         configureConstraints()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        onReloadData?()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -71,6 +77,7 @@ class LoginViewController: UIViewController {
     private func login() {
         eventManager.capture(.login)
         dismiss(animated: true)
+        onReloadData?()
     }
     
 }
