@@ -18,6 +18,16 @@ class EventsListViewController: UITableViewController {
         action: #selector(EventsListViewController.logout)
     )
     
+    private lazy var addEventBarButtonItem = UIBarButtonItem(
+        image: UIImage(systemName: "plus"),
+        style: .plain,
+        target: self,
+        action: #selector(EventsListViewController.addEvent)
+    )
+    
+    private lazy var refresh = UIRefreshControl()
+    private lazy var searchController = UISearchController()
+    
     // MARK: - Variables
     
     private let eventManager: EventManager
@@ -41,6 +51,7 @@ class EventsListViewController: UITableViewController {
         super.viewDidLoad()
         configureUI()
         bing()
+        setupSearchController()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,24 +61,25 @@ class EventsListViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        viewModel.reloadData {
-            self.tableView.reloadData()
-        }
+        reloadData()
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-                if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
-//                    self.fetchNextPage()
-                   
-                }
-            }
+        if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
+            //                    self.fetchNextPage()
+            
+        }
+    }
     
     // MARK: - Configuration
     
     private func configureUI() {
         navigationItem.title = "Events List"
         navigationItem.rightBarButtonItem = self.logoutBarButtonItem
+        navigationItem.leftBarButtonItem = self.addEventBarButtonItem
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
+        refresh.addTarget(self, action: #selector(updateTable), for: .valueChanged)
+        tableView.refreshControl = refresh
     }
     
     private func bing() {
@@ -83,14 +95,54 @@ class EventsListViewController: UITableViewController {
         eventManager.capture(.logout)
         let vc = LoginViewController(eventManager: eventManager)
         
-        vc.onReloadData = {
-            self.viewModel.reloadData {
-                self.tableView.reloadData()
-            }
+        vc.onReloadData = { [weak self] in
+            guard let self else { return }
+            self.reloadData()
         }
         
         let navVc = UINavigationController(rootViewController: vc)
         present(navVc, animated: true)
     }
     
+    @objc
+    private func addEvent() {
+        
+    }
+    
+    @objc
+    private func updateTable() {
+        reloadData()
+        refresh.endRefreshing()
+    }
+    
+    private func reloadData() {
+        viewModel.reloadData { [weak self] in
+            guard let self else { return }
+            self.tableView.reloadData()
+            self.tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        }
+    }
+    
+}
+
+// MARK: - Search
+extension EventsListViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if !searchText.isEmpty {
+            viewModel.search(searchText: searchText)
+            tableView.reloadData()
+        } else {
+            reloadData()
+        }
+        
+    }
+    
+    private func setupSearchController() {
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search Event"
+        searchController.searchBar.autocapitalizationType = .allCharacters
+        navigationItem.searchController = searchController
+    }
 }

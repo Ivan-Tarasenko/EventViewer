@@ -22,6 +22,7 @@ protocol EventListProtorol: AnyObject {
     func eventDate(index: Int) -> String?
     func reloadData(completion: @escaping () -> Void)
     func deleteEvent(index: Int)
+    func search(searchText: String)
 }
 
 final class EventListViewModel: EventListProtorol {
@@ -33,7 +34,6 @@ final class EventListViewModel: EventListProtorol {
  
     init() {
         allEvents = eventManager.allEvents()
-        
     }
     
     
@@ -57,5 +57,16 @@ final class EventListViewModel: EventListProtorol {
     func deleteEvent(index: Int) {
         eventManager.deleteEvent(index: index)
         allEvents.remove(at: index)
+    }
+    
+    func search(searchText: String) {
+        
+        
+        for (index, event) in allEvents.enumerated() where
+        event.value(forKey: KeyProperties.id) as? String == searchText {
+            
+            let removeItem = allEvents.remove(at: index)
+            allEvents.insert(removeItem, at: 0)
+        }
     }
 }
