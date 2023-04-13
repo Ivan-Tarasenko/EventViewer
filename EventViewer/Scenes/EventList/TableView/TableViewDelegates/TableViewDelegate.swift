@@ -16,8 +16,8 @@ final class TableViewDelegate: NSObject, UITableViewDelegate {
     }
     
      func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
-           onScrollAction?()
-        }
+         if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
+             onScrollAction?()
+         }
     }
 }

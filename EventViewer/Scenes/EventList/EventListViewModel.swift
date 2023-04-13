@@ -34,9 +34,9 @@ final class EventListViewModel: EventListModelProtorol {
     
     init(eventManager: EventManager) {
         self.eventManager = eventManager
-        eventManager.getEvents()
-        allEvents = eventManager.events
     }
+    
+    
     
     
     

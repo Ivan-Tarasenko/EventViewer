@@ -30,10 +30,11 @@ class EventsListViewController: UITableViewController {
     
     // MARK: - Variables
     
+    private var viewModel: EventListModelProtorol!
+    private var countLoadData: Int = 0
     private let eventManager: EventManager
     private let dataSource: TableViewDataSourse
     private let delegate: TableViewDelegate
-    private var viewModel: EventListModelProtorol!
     
     // MARK: - Lifecycle
     init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
@@ -49,15 +50,12 @@ class EventsListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        eventManager.getEvents()
-        
         viewModel  = EventListViewModel(eventManager: eventManager)
+        uploadData()
         configureUI()
         bing()
         setupSearchController()
         
-       test()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,18 +67,6 @@ class EventsListViewController: UITableViewController {
         super.viewDidAppear(animated)
         reloadData()
     }
-    
-    
-    
-
-    func test() {
-        delegate.onScrollAction = { [weak self] in
-            guard let self else { return }
-            print("scroll")
-        }
-    }
-    
-    
     
     // MARK: - Configuration
     
@@ -124,6 +110,22 @@ class EventsListViewController: UITableViewController {
     private func updateTable() {
         reloadData()
         refresh.endRefreshing()
+    }
+    
+    // MARK: - Additional functions
+    
+   private func uploadData() {
+        delegate.onScrollAction = { [weak self] in
+            guard let self else { return }
+            
+            self.eventManager.getEvents(n: self.countLoadData)
+            self.viewModel.allEvents = self.eventManager.events
+            
+            if self.countLoadData < self.viewModel.allEvents.count {
+                self.countLoadData += 5
+                self.tableView.reloadData()
+            }
+        }
     }
     
     private func reloadData() {

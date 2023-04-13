@@ -56,7 +56,7 @@ public final class EventManager: NSPersistentContainer {
         let request = DBEvent.makeFetchRequest()
         let sort = NSSortDescriptor(key: #keyPath(DBEvent.createdAt), ascending: false)
         request.sortDescriptors = [sort]
-        request.fetchLimit = 15 + n
+        request.fetchLimit = (15 + n)
         
         queue.sync {
             do {
