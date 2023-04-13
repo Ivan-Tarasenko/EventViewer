@@ -18,14 +18,25 @@ class EventsListViewController: UITableViewController {
         action: #selector(EventsListViewController.logout)
     )
     
+    private lazy var addEventBarButtonItem = UIBarButtonItem(
+        image: UIImage(systemName: "plus"),
+        style: .plain,
+        target: self,
+        action: #selector(EventsListViewController.addEvent)
+    )
+    
+    private lazy var refresh = UIRefreshControl()
+    private lazy var searchController = UISearchController()
+    
     // MARK: - Variables
     
+    private var viewModel: EventListModelProtorol!
+    private var countLoadData: Int = 0
     private let eventManager: EventManager
     private let dataSource: TableViewDataSourse
     private let delegate: TableViewDelegate
-    private var viewModel: EventListProtorol = EventListViewModel()
-    // MARK: - Lifecycle
     
+    // MARK: - Lifecycle
     init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
         self.eventManager = eventManager
         self.dataSource = dataSourse
@@ -39,8 +50,12 @@ class EventsListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel  = EventListViewModel(eventManager: eventManager)
+        uploadData()
         configureUI()
         bing()
+        setupSearchController()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,24 +65,18 @@ class EventsListViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        viewModel.reloadData {
-            self.tableView.reloadData()
-        }
+        reloadData()
     }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-                if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
-//                    self.fetchNextPage()
-                   
-                }
-            }
     
     // MARK: - Configuration
     
     private func configureUI() {
         navigationItem.title = "Events List"
         navigationItem.rightBarButtonItem = self.logoutBarButtonItem
+        navigationItem.leftBarButtonItem = self.addEventBarButtonItem
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
+        refresh.addTarget(self, action: #selector(updateTable), for: .valueChanged)
+        tableView.refreshControl = refresh
     }
     
     private func bing() {
@@ -83,14 +92,72 @@ class EventsListViewController: UITableViewController {
         eventManager.capture(.logout)
         let vc = LoginViewController(eventManager: eventManager)
         
-        vc.onReloadData = {
-            self.viewModel.reloadData {
-                self.tableView.reloadData()
-            }
+        vc.onReloadData = { [weak self] in
+            guard let self else { return }
+            self.reloadData()
         }
         
         let navVc = UINavigationController(rootViewController: vc)
         present(navVc, animated: true)
     }
     
+    @objc
+    private func addEvent() {
+        
+    }
+    
+    @objc
+    private func updateTable() {
+        reloadData()
+        refresh.endRefreshing()
+    }
+    
+    // MARK: - Additional functions
+    
+   private func uploadData() {
+        delegate.onScrollAction = { [weak self] in
+            guard let self else { return }
+            
+            self.eventManager.getEvents(n: self.countLoadData)
+            self.viewModel.allEvents = self.eventManager.events
+            
+            if self.countLoadData < self.viewModel.allEvents.count {
+                self.countLoadData += 5
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    private func reloadData() {
+        viewModel.reloadData { [weak self] in
+            guard let self else { return }
+            self.tableView.reloadData()
+            self.tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        }
+    }
+    
+}
+
+// MARK: - Search
+extension EventsListViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if !searchText.isEmpty {
+            viewModel.search(searchText: searchText)
+            tableView.reloadData()
+        } else {
+            reloadData()
+        }
+        
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+       reloadData()
+    }
+    private func setupSearchController() {
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search Event"
+        searchController.searchBar.autocapitalizationType = .allCharacters
+        navigationItem.searchController = searchController
+    }
 }

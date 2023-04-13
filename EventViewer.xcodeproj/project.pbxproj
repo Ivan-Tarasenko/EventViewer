@@ -69,19 +69,12 @@
 			path = TableView;
 			sourceTree = "<group>";
 		};
-		1A6B315C29E498F20013DB8F /* CustomUIElements */ = {
-			isa = PBXGroup;
-			children = (
-				1A6B315B29E498E10013DB8F /* TableView */,
-			);
-			path = CustomUIElements;
-			sourceTree = "<group>";
-		};
 		1A6B316129E5300D0013DB8F /* EventList */ = {
 			isa = PBXGroup;
 			children = (
 				F3CB02F52982EC100078A0F9 /* EventsListViewController.swift */,
 				1A6B315F29E530070013DB8F /* EventListViewModel.swift */,
+				1A6B315B29E498E10013DB8F /* TableView */,
 			);
 			path = EventList;
 			sourceTree = "<group>";
@@ -137,7 +130,6 @@
 				F3CB02E82982E9810078A0F9 /* Entities */,
 				F3CB02D32982E91D0078A0F9 /* Components */,
 				F3CB02FA2982F1B00078A0F9 /* Scenes */,
-				1A6B315C29E498F20013DB8F /* CustomUIElements */,
 			);
 			path = EventViewer;
 			sourceTree = "<group>";
