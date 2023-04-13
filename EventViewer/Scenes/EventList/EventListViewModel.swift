@@ -14,7 +14,7 @@ enum KeyProperties {
     static let parameters = "parameters"
 }
 
-protocol EventListProtorol: AnyObject {
+protocol EventListModelProtorol: AnyObject {
     
     var allEvents: [NSManagedObject] { get set }
     
@@ -25,23 +25,28 @@ protocol EventListProtorol: AnyObject {
     func search(searchText: String)
 }
 
-final class EventListViewModel: EventListProtorol {
+final class EventListViewModel: EventListModelProtorol {
     
     
-    private let eventManager = EventManager()
+    let eventManager: EventManager?
     
     var allEvents: [NSManagedObject] = []
- 
-    init() {
-        allEvents = eventManager.allEvents()
+    
+    init(eventManager: EventManager) {
+        self.eventManager = eventManager
+        eventManager.getEvents()
+        allEvents = eventManager.events
     }
+    
     
     
     func eventID(index: Int) -> String? {
-        allEvents[index].value(forKey: KeyProperties.id) as? String ?? "Not Events"
+        guard !allEvents.isEmpty else { return "No Events" }
+        return allEvents[index].value(forKey: KeyProperties.id) as? String
     }
     
     func eventDate(index: Int) -> String? {
+        guard !allEvents.isEmpty else { return "No Date" }
         guard let eventDate = allEvents[index].value(forKey: KeyProperties.createAt) as? Date else { return "Not Date" }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
@@ -50,11 +55,15 @@ final class EventListViewModel: EventListProtorol {
     }
     
     func reloadData(completion: @escaping () -> Void) {
-        allEvents = eventManager.allEvents()
+        guard let eventManager = eventManager else { return }
+        eventManager.getEvents()
+        allEvents = eventManager.events
         completion()
     }
     
     func deleteEvent(index: Int) {
+        guard !allEvents.isEmpty else { return }
+        guard let eventManager = eventManager else { return }
         eventManager.deleteEvent(index: index)
         allEvents.remove(at: index)
     }

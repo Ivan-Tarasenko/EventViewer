@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EventsListViewController: UITableViewController, UIScrollViewAccessibilityDelegate {
+class EventsListViewController: UITableViewController {
     
     // MARK: - Outlets
     
@@ -33,9 +33,9 @@ class EventsListViewController: UITableViewController, UIScrollViewAccessibility
     private let eventManager: EventManager
     private let dataSource: TableViewDataSourse
     private let delegate: TableViewDelegate
-    private var viewModel: EventListProtorol = EventListViewModel()
-    // MARK: - Lifecycle
+    private var viewModel: EventListModelProtorol!
     
+    // MARK: - Lifecycle
     init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
         self.eventManager = eventManager
         self.dataSource = dataSourse
@@ -49,11 +49,15 @@ class EventsListViewController: UITableViewController, UIScrollViewAccessibility
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        eventManager.getEvents()
+        
+        viewModel  = EventListViewModel(eventManager: eventManager)
         configureUI()
         bing()
         setupSearchController()
         
-        
+       test()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,22 +70,17 @@ class EventsListViewController: UITableViewController, UIScrollViewAccessibility
         reloadData()
     }
     
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
-        print("scroll")
-        if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
-            //                    self.fetchNextPage()
-            
+    
+    
+
+    func test() {
+        delegate.onScrollAction = { [weak self] in
+            guard let self else { return }
+            print("scroll")
         }
     }
     
-    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-            print("last")
-        }
     
-    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
-    }
     
     // MARK: - Configuration
     

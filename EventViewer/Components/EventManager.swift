@@ -13,7 +13,7 @@ public final class EventManager: NSPersistentContainer {
 
     public let queue = DispatchQueue(label: "com.simla.PersistantEventManager", qos: .default)
     
-    private var events: [NSManagedObject] = []
+    var events: [NSManagedObject] = []
 
     public init() {
         super.init(name: "PersistantEventManagerDB", managedObjectModel: Self.model)
@@ -50,21 +50,24 @@ public final class EventManager: NSPersistentContainer {
         })
     }
     
-    public func allEvents() -> [NSManagedObject] {
+    public func getEvents(n: Int = 0) {
         
         var allEvents: [NSManagedObject] = []
         let request = DBEvent.makeFetchRequest()
         let sort = NSSortDescriptor(key: #keyPath(DBEvent.createdAt), ascending: false)
         request.sortDescriptors = [sort]
-        do {
-            allEvents = try viewContext.fetch(request)
-        } catch let error as NSError {
-            print("Coud not fetch \(error), \(error.userInfo)")
+        request.fetchLimit = 15 + n
+        
+        queue.sync {
+            do {
+                allEvents = try viewContext.fetch(request)
+            } catch let error as NSError {
+                print("Coud not fetch \(error), \(error.userInfo)")
+            }
         }
         
         events = allEvents
-        
-        return events
+    
     }
     
     public func deleteEvent(index: Int) {

@@ -8,9 +8,16 @@
 import UIKit
 
 final class TableViewDelegate: NSObject, UITableViewDelegate {
+
+    var onScrollAction: (() -> Void)?
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
     
+     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
+           onScrollAction?()
+        }
+    }
 }

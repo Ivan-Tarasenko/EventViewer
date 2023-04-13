@@ -9,7 +9,7 @@ import UIKit
 
 final class TableViewDataSourse: NSObject, UITableViewDataSource {
     
-    var viewModel: EventListProtorol!
+    var viewModel: EventListModelProtorol!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if viewModel.allEvents.isEmpty {
@@ -29,10 +29,15 @@ final class TableViewDataSourse: NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-    
+        
+        if indexPath.row > 0 {
+            if editingStyle == .delete {
+                viewModel.deleteEvent(index: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .top)
+                tableView.reloadData()
+            }
+        } else {
             viewModel.deleteEvent(index: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .top)
             tableView.reloadData()
         }
       }
