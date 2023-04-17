@@ -10,7 +10,6 @@ import UIKit
 class EventsListViewController: UITableViewController {
     
     // MARK: - Outlets
-    
     private lazy var logoutBarButtonItem = UIBarButtonItem(
         title: "Logout",
         style: .plain,
@@ -30,14 +29,14 @@ class EventsListViewController: UITableViewController {
     
     // MARK: - Variables
     
-    private var viewModel: EventListModelProtorol!
     private var countLoadData: Int = 0
+    private var viewModel: EventListModelProtorol!
     private let eventManager: EventManager
-    private let dataSource: TableViewDataSourse
+    private let dataSource: TableViewDataSource
     private let delegate: TableViewDelegate
     
     // MARK: - Lifecycle
-    init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
+    init(eventManager: EventManager, dataSourse: TableViewDataSource, delegate: TableViewDelegate) {
         self.eventManager = eventManager
         self.dataSource = dataSourse
         self.delegate = delegate
@@ -55,6 +54,10 @@ class EventsListViewController: UITableViewController {
         configureUI()
         bing()
         setupSearchController()
+        tapCell()
+    
+        
+        
         
     }
     
@@ -66,6 +69,20 @@ class EventsListViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         reloadData()
+        
+        let test: Set<DBParameter> = eventManager.events[2].value(forKeyPath: "parameters") as! Set<DBParameter>
+//
+        
+        for i in test {
+//            print("через эвент \(i.value(forKey: "key"))")
+//            print("через эвент \(i.value(forKey: "stringValue"))")
+        }
+//
+        
+//        print(eventManager.lastDateOfEvent("VIEW_SCREEN", withParameters: ["SCREEN_ID": .string("EVENTS_LIST")]))
+        
+//        eventManager.getParam()
+//print("на прямую \(String(describing: eventManager.allParam[0].value(forKey: "key")))")
     }
     
     // MARK: - Configuration
@@ -104,6 +121,15 @@ class EventsListViewController: UITableViewController {
     @objc
     private func addEvent() {
         
+        eventManager.clean { error in
+            if (error != nil) {
+                print(error.debugDescription)
+                return
+            }
+            self.reloadData()
+        }
+        
+        eventManager.cleanParam()
     }
     
     @objc
@@ -112,9 +138,28 @@ class EventsListViewController: UITableViewController {
         refresh.endRefreshing()
     }
     
-    // MARK: - Additional functions
+    private func tapCell() {
+        delegate.onTapCell = { [weak self] index in
+            guard let self else { return }
+            
+            let detailVC = DetailEventViewController(
+                dataSource: DetailEventDataSource(),
+                delegate: DetailEventDelegate()
+            )
+            
+            detailVC.indexCell = index
+            detailVC.eventManager = self.eventManager
+            
+            let navVC = UINavigationController(rootViewController: detailVC)
+            navVC.modalPresentationStyle = .fullScreen
+            
+            self.present(navVC, animated: true)
+            
+        }
+    }
     
-   private func uploadData() {
+    // MARK: - Additional functions
+    private func uploadData() {
         delegate.onScrollAction = { [weak self] in
             guard let self else { return }
             
@@ -151,8 +196,9 @@ extension EventsListViewController: UISearchBarDelegate {
         
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-       reloadData()
+        reloadData()
     }
+    
     private func setupSearchController() {
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self

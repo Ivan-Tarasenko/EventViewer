@@ -10,6 +10,7 @@ import UIKit
 final class TableViewDelegate: NSObject, UITableViewDelegate {
 
     var onScrollAction: (() -> Void)?
+    var onTapCell: ((Int) -> Void)?
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
@@ -19,5 +20,10 @@ final class TableViewDelegate: NSObject, UITableViewDelegate {
          if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
              onScrollAction?()
          }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        onTapCell?(indexPath.row)
     }
 }

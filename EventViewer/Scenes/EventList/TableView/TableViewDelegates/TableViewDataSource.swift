@@ -1,5 +1,5 @@
 //
-//  TableViewDataSourse.swift
+//  TableViewDataSource.swift
 //  EventViewer
 //
 //  Created by Иван Тарасенко on 09.04.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TableViewDataSourse: NSObject, UITableViewDataSource {
+final class TableViewDataSource: NSObject, UITableViewDataSource {
     
     var viewModel: EventListModelProtorol!
     

@@ -9,6 +9,12 @@
 import CoreData
 import Foundation
 
+enum KeyProperties {
+    static let id = "id"
+    static let createAt = "createdAt"
+    static let parameters = "parameters"
+}
+
 public final class EventManager: NSPersistentContainer {
 
     public let queue = DispatchQueue(label: "com.simla.PersistantEventManager", qos: .default)
@@ -28,6 +34,8 @@ public final class EventManager: NSPersistentContainer {
                 print("PersistantEventManager successfully loaded")
             }
         })
+        
+//   print(self.persistentStoreDescriptions.first?.url)
     }
 
     // сохронение события в БД
@@ -43,7 +51,8 @@ public final class EventManager: NSPersistentContainer {
             }
             do {
                 try context.save()
-                print("Event \"\(event.id)\" saved")
+//                print("Event \"\(event.id)\" saved")
+//                print("Event \"\(event.parameters)\" saved")
             } catch {
                 print("Error:", error.localizedDescription)
             }
@@ -69,6 +78,69 @@ public final class EventManager: NSPersistentContainer {
         events = allEvents
     
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    var allParam: [NSManagedObject] = []
+    
+    public func getParam() {
+        
+//        var allEvents: [NSManagedObject] = []
+        let request = DBParameter.makeFetchRequest()
+//        let sort = NSSortDescriptor(key: #keyPath(DBParameter.key), ascending: false)
+//        request.sortDescriptors = [sort]
+//        request.fetchLimit = (15 + n)
+        
+//        queue.sync {
+            do {
+                allParam = try viewContext.fetch(request)
+            } catch let error as NSError {
+                print("Coud not fetch \(error), \(error.userInfo)")
+            }
+//        }
+        
+//        events = allEvents
+    
+    }
+    
+    public func cleanParam(completion: ((Error?) -> Void)? = nil) {
+        performBackgroundTask { context in
+            do {
+                let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: DBParameter.entityName)
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+                try context.execute(deleteRequest)
+                if context.hasChanges {
+                    try context.save()
+                }
+                DispatchQueue.main.async {
+                    completion?(nil)
+                }
+            } catch {
+                print("Error:", error.localizedDescription)
+                DispatchQueue.main.async {
+                    completion?(error)
+                }
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     public func deleteEvent(index: Int) {
         

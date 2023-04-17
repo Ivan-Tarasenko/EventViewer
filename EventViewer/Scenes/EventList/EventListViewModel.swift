@@ -8,12 +8,6 @@
 import Foundation
 import CoreData
 
-enum KeyProperties {
-    static let id = "id"
-    static let createAt = "createdAt"
-    static let parameters = "parameters"
-}
-
 protocol EventListModelProtorol: AnyObject {
     
     var allEvents: [NSManagedObject] { get set }
