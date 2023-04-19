@@ -38,17 +38,17 @@ final class DetailEventViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel = DetailEventViewModel(eventManager: eventManager)
+        viewModel = DetailEventViewModel(eventManager: eventManager, indexCell: indexCell)
         configerUI()
         bing()
         
-        print(viewModel.paraneters(index: indexCell)?.count)
+//        viewModel.getParaneterOfEvent(index: indexCell)
     }
     
     // MARK: - Configere
     private func configerUI() {
         navigationItem.leftBarButtonItem = self.deleteButtonItem
-        navigationItem.title = viewModel.eventID(index: indexCell)
+        navigationItem.title = "Event Details"
         tableView.register(DetailEventTableCell.self, forCellReuseIdentifier: DetailEventTableCell.identifier)
     }
     
@@ -56,7 +56,6 @@ final class DetailEventViewController: UITableViewController {
         tableView.dataSource = dataSource
         tableView.delegate = delegate
         dataSource.viewModel = viewModel
-        dataSource.indexCell = indexCell
     }
     
     // MARK: - Actions

@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  EventViewer
+
+  Created by Иван Тарасенко on 19.04.2023.
+  
+*/
+// Title section
+"idEvent" = "ID Event";
+"dateEvent" = "Date Event";
+"parameterEvent" = "Parameters Event";
+
+// Title parameter
+"key" = "Key parameter";
+"string" = "String parameter";
+"int" = "Integer parameter";
+"bool" = "Boolean parameter";
+
+// Error title
+"noParameter" = "There are no parameters";

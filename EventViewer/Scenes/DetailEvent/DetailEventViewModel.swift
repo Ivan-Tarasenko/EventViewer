@@ -9,41 +9,83 @@ import Foundation
 import CoreData
 
 protocol DetailEventModelProtocol: AnyObject {
-    
-    func eventID(index: Int) -> String?
-    func paraneters(index: Int) -> Set<DBParameter>?
+    var paravetersOfEvent: [String: [String]] { get }
+    var titleSection: [String] { get }
+    var titleParameter: [String] { get }
 }
 
 final class DetailEventViewModel: DetailEventModelProtocol {
     
-    let eventManager: EventManager?
+    let eventManager: EventManager
+    let indexCell: Int
+    var paravetersOfEvent: [String: [String]] = [:]
+    var titleSection: [String] = []
+    var titleParameter: [String] = []
     
-    var allEvents: [NSManagedObject] = []
-    
-    init(eventManager: EventManager) {
+    init(eventManager: EventManager, indexCell: Int) {
         self.eventManager = eventManager
-        allEvents = eventManager.events
-    }
-    
-    func eventID(index: Int) -> String? {
-        guard !allEvents.isEmpty else { return "No Events" }
-        return allEvents[index].value(forKey: KeyProperties.id) as? String
-    }
-    
-    func paraneters(index: Int) -> Set<DBParameter>? {
-        guard !allEvents.isEmpty else { return nil }
+        self.indexCell = indexCell
         
-        let test = allEvents[index].value(forKey: KeyProperties.parameters) as? Set<DBParameter>
-       
-        for i in test! {
-            print("Параметр ключ: \(i.value(forKey: "key"))")
-            print("Параметр стринг: \(i.value(forKey: "stringValue"))")
-            print("Параметр инт: \(i.value(forKey: "integerValue"))")
-            print("Параметр бул: \(i.value(forKey: "booleanValue"))")
-            print("Параметр массив: \(i.value(forKey: "arrayValue"))")
-            print("Параметр евент: \(i.value(forKey: "event"))")
+        addTitleSection()
+        addTitleParameter()
+        getParaneterOfEvent(index: indexCell)
+    }
+    
+    private func addTitleSection() {
+        titleSection.append(LocalizationString.idEvent)
+        titleSection.append(LocalizationString.dateEvent)
+        titleSection.append(LocalizationString.parameterEvent)
+    }
+    
+    private func addTitleParameter() {
+        titleParameter.append(LocalizationString.key)
+        titleParameter.append(LocalizationString.string)
+        titleParameter.append(LocalizationString.int)
+        titleParameter.append(LocalizationString.bool)
+        
+    }
+    
+    private func getParaneterOfEvent(index: Int) {
+        guard !eventManager.events.isEmpty else { return }
+        
+        
+        if let id = eventManager.events[index].value(forKey: KeyProperties.id) as? String {
+            paravetersOfEvent[KeyProperties.id] = [id]
         }
         
-        return test
+        if let createAt = eventManager.events[index].value(forKey: KeyProperties.createAt) as? Date {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
+            let timeString = dateFormatter.string(from: createAt)
+            paravetersOfEvent[KeyProperties.createAt] = [timeString]
+        }
+        
+        
+        if let parameters = eventManager.events[index].value(forKey: KeyProperties.parameters) as? Set<DBParameter> {
+            
+            for parameter in parameters {
+                
+                // getting all the event parameters
+                let key = parameter.value(forKey: KeyParameters.key) as? String
+                let stringValue = parameter.value(forKey: KeyParameters.stringValue) as? String
+                let integerValue = parameter.value(forKey: KeyParameters.integerValue) as? Int
+                let booleanValue = parameter.value(forKey: KeyParameters.booleanValue) as? Bool
+                
+                // encode all parameters in JSONE format
+                let encodedKey = try! JSONEncoder().encode(key)
+                let encodedString = try! JSONEncoder().encode(stringValue)
+                let encodedInt = try! JSONEncoder().encode(integerValue)
+                let encodedBool = try! JSONEncoder().encode(booleanValue)
+                
+                // extracting data in String
+                let jsonKey = String(data: encodedKey, encoding: .utf8)
+                let jsonString = String(data: encodedString, encoding: .utf8)
+                let jsonInt = String(data: encodedInt, encoding: .utf8)
+                let jsonBool = String(data: encodedBool, encoding: .utf8)
+                
+                // adding all parameters to the dictionary
+                paravetersOfEvent[KeyProperties.parameters] = [jsonKey!, jsonString!, jsonInt!, jsonBool!]
+            }
+        }
     }
 }

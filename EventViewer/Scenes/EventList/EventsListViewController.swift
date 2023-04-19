@@ -55,10 +55,6 @@ class EventsListViewController: UITableViewController {
         bing()
         setupSearchController()
         tapCell()
-    
-        
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,20 +65,6 @@ class EventsListViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         reloadData()
-        
-        let test: Set<DBParameter> = eventManager.events[2].value(forKeyPath: "parameters") as! Set<DBParameter>
-//
-        
-        for i in test {
-//            print("через эвент \(i.value(forKey: "key"))")
-//            print("через эвент \(i.value(forKey: "stringValue"))")
-        }
-//
-        
-//        print(eventManager.lastDateOfEvent("VIEW_SCREEN", withParameters: ["SCREEN_ID": .string("EVENTS_LIST")]))
-        
-//        eventManager.getParam()
-//print("на прямую \(String(describing: eventManager.allParam[0].value(forKey: "key")))")
     }
     
     // MARK: - Configuration
@@ -141,6 +123,8 @@ class EventsListViewController: UITableViewController {
     private func tapCell() {
         delegate.onTapCell = { [weak self] index in
             guard let self else { return }
+            
+            guard !self.viewModel.allEvents.isEmpty else { return }
             
             let detailVC = DetailEventViewController(
                 dataSource: DetailEventDataSource(),

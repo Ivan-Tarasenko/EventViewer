@@ -9,12 +9,6 @@
 import CoreData
 import Foundation
 
-enum KeyProperties {
-    static let id = "id"
-    static let createAt = "createdAt"
-    static let parameters = "parameters"
-}
-
 public final class EventManager: NSPersistentContainer {
 
     public let queue = DispatchQueue(label: "com.simla.PersistantEventManager", qos: .default)
@@ -51,8 +45,6 @@ public final class EventManager: NSPersistentContainer {
             }
             do {
                 try context.save()
-//                print("Event \"\(event.id)\" saved")
-//                print("Event \"\(event.parameters)\" saved")
             } catch {
                 print("Error:", error.localizedDescription)
             }

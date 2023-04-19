@@ -13,7 +13,7 @@ final class TableViewDelegate: NSObject, UITableViewDelegate {
     var onTapCell: ((Int) -> Void)?
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return 80
     }
     
      func scrollViewDidScroll(_ scrollView: UIScrollView) {

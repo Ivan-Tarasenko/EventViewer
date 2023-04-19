@@ -30,10 +30,6 @@ final class EventListViewModel: EventListModelProtorol {
         self.eventManager = eventManager
     }
     
-    
-    
-    
-    
     func eventID(index: Int) -> String? {
         guard !allEvents.isEmpty else { return "No Events" }
         return allEvents[index].value(forKey: KeyProperties.id) as? String
