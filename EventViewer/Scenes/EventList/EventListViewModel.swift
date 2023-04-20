@@ -8,12 +8,6 @@
 import Foundation
 import CoreData
 
-enum KeyProperties {
-    static let id = "id"
-    static let createAt = "createdAt"
-    static let parameters = "parameters"
-}
-
 protocol EventListModelProtorol: AnyObject {
     
     var allEvents: [NSManagedObject] { get set }
@@ -35,10 +29,6 @@ final class EventListViewModel: EventListModelProtorol {
     init(eventManager: EventManager) {
         self.eventManager = eventManager
     }
-    
-    
-    
-    
     
     func eventID(index: Int) -> String? {
         guard !allEvents.isEmpty else { return "No Events" }

@@ -21,6 +21,12 @@ public extension Event {
     static var logout: Event {
         Event(id: "LOGOUT")
     }
+    
+    static func detailScreen(_ screenId: String) -> Event {
+        Event(id: "DETAIL_SCREEN", parameters: [
+            "SCREEN_ID": .string(screenId)
+        ])
+    }
 
     static func viewScreen(_ screenId: String) -> Event {
         Event(id: "VIEW_SCREEN", parameters: [

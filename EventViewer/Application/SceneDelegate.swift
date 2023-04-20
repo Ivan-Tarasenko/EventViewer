@@ -11,13 +11,13 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     let eventManager: EventManager
-    let dataSourse: TableViewDataSourse
+    let dataSourse: TableViewDataSource
     let delegate: TableViewDelegate
     var window: UIWindow?
     
     override init() {
         self.eventManager = EventManager()
-        self.dataSourse = TableViewDataSourse()
+        self.dataSourse = TableViewDataSource()
         self.delegate = TableViewDelegate()
         super.init()
     }

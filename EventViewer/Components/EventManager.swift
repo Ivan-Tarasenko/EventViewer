@@ -10,11 +10,11 @@ import CoreData
 import Foundation
 
 public final class EventManager: NSPersistentContainer {
-
+    
     public let queue = DispatchQueue(label: "com.simla.PersistantEventManager", qos: .default)
     
     var events: [NSManagedObject] = []
-
+    
     public init() {
         super.init(name: "PersistantEventManagerDB", managedObjectModel: Self.model)
         let description = NSPersistentStoreDescription()
@@ -28,8 +28,10 @@ public final class EventManager: NSPersistentContainer {
                 print("PersistantEventManager successfully loaded")
             }
         })
+        
+//        print(self.persistentStoreDescriptions.first?.url)
     }
-
+    
     // сохронение события в БД
     public func capture(_ event: Event) {
         performBackgroundTask({ context in
@@ -43,7 +45,6 @@ public final class EventManager: NSPersistentContainer {
             }
             do {
                 try context.save()
-                print("Event \"\(event.id)\" saved")
             } catch {
                 print("Error:", error.localizedDescription)
             }
@@ -67,21 +68,27 @@ public final class EventManager: NSPersistentContainer {
         }
         
         events = allEvents
-    
+        
     }
     
     public func deleteEvent(index: Int) {
         
         let context = viewContext
+        let parameterSet = events[index].value(forKey: KeyProperties.parameters) as? NSSet ?? NSSet()
         
         context.delete(events[index])
         events.remove(at: index)
-
-            do {
-                try context.save()
-            } catch {
-                print("Error:", error.localizedDescription)
-            }
+        
+        // remove parameters of event
+        for parameter in parameterSet {
+            context.delete((parameter as! NSManagedObject))
+            
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Error:", error.localizedDescription)
+        }
     }
     
     public func entitiesCount() -> Int {
@@ -92,11 +99,11 @@ public final class EventManager: NSPersistentContainer {
             return .zero
         }
     }
-
+    
     public func containsEvent(_ event: String, withParameters parameters: ParameterSet? = nil) -> Bool {
         containsEvent(with: preparePredicate(forEvent: event, withParameters: parameters))
     }
-
+    
     public func containsEvent(with predicate: NSPredicate) -> Bool {
         let request = DBEvent.makeFetchRequest()
         request.predicate = predicate
@@ -107,11 +114,11 @@ public final class EventManager: NSPersistentContainer {
             return false
         }
     }
-
+    
     public func lastDateOfEvent(_ event: String, withParameters parameters: ParameterSet? = nil) -> Date? {
         lastDateOfEvent(with: preparePredicate(forEvent: event, withParameters: parameters))
     }
-
+    
     public func lastDateOfEvent(with predicate: NSPredicate) -> Date? {
         let request = DBEvent.makeFetchRequest()
         request.predicate = predicate
@@ -125,13 +132,19 @@ public final class EventManager: NSPersistentContainer {
             return nil
         }
     }
-
+    
     public func clean(completion: ((Error?) -> Void)? = nil) {
         performBackgroundTask { context in
             do {
-                let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: DBEvent.entityName)
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-                try context.execute(deleteRequest)
+                let deleteFetchEvent = NSFetchRequest<NSFetchRequestResult>(entityName: DBEvent.entityName)
+                let deleteFetchParameter = NSFetchRequest<NSFetchRequestResult>(entityName: DBParameter.entityName)
+                
+                let deleteRequestEvent = NSBatchDeleteRequest(fetchRequest: deleteFetchEvent)
+                let delereRequestParameter = NSBatchDeleteRequest(fetchRequest: deleteFetchParameter)
+                
+                try context.execute(deleteRequestEvent)
+                try context.execute(delereRequestParameter)
+                
                 if context.hasChanges {
                     try context.save()
                 }
@@ -146,7 +159,7 @@ public final class EventManager: NSPersistentContainer {
             }
         }
     }
-
+    
     private func preparePredicate(forEvent event: String, withParameters parameters: ParameterSet?) -> NSPredicate {
         var subPredicates: [NSPredicate] = [
             NSPredicate(format: "id=%@", event)
@@ -175,5 +188,4 @@ public final class EventManager: NSPersistentContainer {
         }
         return NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
     }
-
 }

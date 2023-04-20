@@ -1,5 +1,5 @@
 //
-//  TableViewDataSourse.swift
+//  TableViewDataSource.swift
 //  EventViewer
 //
 //  Created by Иван Тарасенко on 09.04.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TableViewDataSourse: NSObject, UITableViewDataSource {
+final class TableViewDataSource: NSObject, UITableViewDataSource {
     
     var viewModel: EventListModelProtorol!
     
@@ -29,7 +29,7 @@ final class TableViewDataSourse: NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
+        print(indexPath.row)
         if indexPath.row > 0 {
             if editingStyle == .delete {
                 viewModel.deleteEvent(index: indexPath.row)

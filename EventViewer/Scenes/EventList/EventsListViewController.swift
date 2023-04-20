@@ -10,7 +10,6 @@ import UIKit
 class EventsListViewController: UITableViewController {
     
     // MARK: - Outlets
-    
     private lazy var logoutBarButtonItem = UIBarButtonItem(
         title: "Logout",
         style: .plain,
@@ -25,19 +24,27 @@ class EventsListViewController: UITableViewController {
         action: #selector(EventsListViewController.addEvent)
     )
     
+    private lazy var clearBarButtonItem = UIBarButtonItem(
+        image: UIImage(systemName: "trash"),
+        style: .plain,
+        target: self,
+        action: #selector(EventsListViewController.cleanList)
+    )
+    
+    
     private lazy var refresh = UIRefreshControl()
     private lazy var searchController = UISearchController()
     
     // MARK: - Variables
     
-    private var viewModel: EventListModelProtorol!
     private var countLoadData: Int = 0
+    private var viewModel: EventListModelProtorol!
     private let eventManager: EventManager
-    private let dataSource: TableViewDataSourse
+    private let dataSource: TableViewDataSource
     private let delegate: TableViewDelegate
     
     // MARK: - Lifecycle
-    init(eventManager: EventManager, dataSourse: TableViewDataSourse, delegate: TableViewDelegate) {
+    init(eventManager: EventManager, dataSourse: TableViewDataSource, delegate: TableViewDelegate) {
         self.eventManager = eventManager
         self.dataSource = dataSourse
         self.delegate = delegate
@@ -55,7 +62,7 @@ class EventsListViewController: UITableViewController {
         configureUI()
         bing()
         setupSearchController()
-        
+        tapCell()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +79,7 @@ class EventsListViewController: UITableViewController {
     
     private func configureUI() {
         navigationItem.title = "Events List"
-        navigationItem.rightBarButtonItem = self.logoutBarButtonItem
+        navigationItem.rightBarButtonItems = [self.logoutBarButtonItem, self.clearBarButtonItem]
         navigationItem.leftBarButtonItem = self.addEventBarButtonItem
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
         refresh.addTarget(self, action: #selector(updateTable), for: .valueChanged)
@@ -107,14 +114,46 @@ class EventsListViewController: UITableViewController {
     }
     
     @objc
+    private func cleanList() {
+        eventManager.clean { error in
+            if (error != nil) {
+                print(error.debugDescription)
+                return
+            }
+            self.reloadData()
+        }
+    }
+    
+    @objc
     private func updateTable() {
         reloadData()
         refresh.endRefreshing()
     }
     
-    // MARK: - Additional functions
+    private func tapCell() {
+        delegate.onTapCell = { [weak self] index in
+            guard let self else { return }
+            
+            guard !self.viewModel.allEvents.isEmpty else { return }
+            
+            let detailVC = DetailEventViewController(
+                dataSource: DetailEventDataSource(),
+                delegate: DetailEventDelegate()
+            )
+            
+            detailVC.indexCell = index
+            detailVC.eventManager = self.eventManager
+            
+            let navVC = UINavigationController(rootViewController: detailVC)
+            navVC.modalPresentationStyle = .fullScreen
+            
+            self.present(navVC, animated: true)
+            
+        }
+    }
     
-   private func uploadData() {
+    // MARK: - Additional functions
+    private func uploadData() {
         delegate.onScrollAction = { [weak self] in
             guard let self else { return }
             
@@ -151,8 +190,9 @@ extension EventsListViewController: UISearchBarDelegate {
         
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-       reloadData()
+        reloadData()
     }
+    
     private func setupSearchController() {
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self
