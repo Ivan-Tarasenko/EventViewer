@@ -24,6 +24,14 @@ class EventsListViewController: UITableViewController {
         action: #selector(EventsListViewController.addEvent)
     )
     
+    private lazy var clearBarButtonItem = UIBarButtonItem(
+        image: UIImage(systemName: "trash"),
+        style: .plain,
+        target: self,
+        action: #selector(EventsListViewController.cleanList)
+    )
+    
+    
     private lazy var refresh = UIRefreshControl()
     private lazy var searchController = UISearchController()
     
@@ -71,7 +79,7 @@ class EventsListViewController: UITableViewController {
     
     private func configureUI() {
         navigationItem.title = "Events List"
-        navigationItem.rightBarButtonItem = self.logoutBarButtonItem
+        navigationItem.rightBarButtonItems = [self.logoutBarButtonItem, self.clearBarButtonItem]
         navigationItem.leftBarButtonItem = self.addEventBarButtonItem
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
         refresh.addTarget(self, action: #selector(updateTable), for: .valueChanged)
@@ -103,6 +111,10 @@ class EventsListViewController: UITableViewController {
     @objc
     private func addEvent() {
         
+    }
+    
+    @objc
+    private func cleanList() {
         eventManager.clean { error in
             if (error != nil) {
                 print(error.debugDescription)
@@ -110,8 +122,6 @@ class EventsListViewController: UITableViewController {
             }
             self.reloadData()
         }
-        
-        eventManager.cleanParam()
     }
     
     @objc

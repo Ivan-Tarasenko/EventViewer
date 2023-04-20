@@ -17,6 +17,13 @@ final class DetailEventViewController: UITableViewController {
         action: #selector(DetailEventViewController.deleteEvent)
     )
     
+    private lazy var cancelButtonItem = UIBarButtonItem(
+        title: "Cancel",
+        style: .plain,
+        target: self,
+        action: #selector(DetailEventViewController.cancelEvent)
+    )
+    
     // MARK: - Variables
     var indexCell = 0
     var eventManager: EventManager!
@@ -36,18 +43,22 @@ final class DetailEventViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        eventManager.capture(.detailScreen("DETAIL_OF_EVENT"))
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = DetailEventViewModel(eventManager: eventManager, indexCell: indexCell)
         configerUI()
         bing()
-        
-//        viewModel.getParaneterOfEvent(index: indexCell)
     }
     
     // MARK: - Configere
     private func configerUI() {
         navigationItem.leftBarButtonItem = self.deleteButtonItem
+        navigationItem.rightBarButtonItem = self.cancelButtonItem
         navigationItem.title = "Event Details"
         tableView.register(DetailEventTableCell.self, forCellReuseIdentifier: DetailEventTableCell.identifier)
     }
@@ -61,7 +72,12 @@ final class DetailEventViewController: UITableViewController {
     // MARK: - Actions
     @objc
     private func deleteEvent() {
-        print("delete")
+        eventManager.deleteEvent(index: indexCell)
+        dismiss(animated: true)
+    }
+    
+    @objc
+    private func cancelEvent() {
         dismiss(animated: true)
     }
 }

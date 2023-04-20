@@ -29,7 +29,7 @@ final class TableViewDataSource: NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
+        print(indexPath.row)
         if indexPath.row > 0 {
             if editingStyle == .delete {
                 viewModel.deleteEvent(index: indexPath.row)
