@@ -21,7 +21,7 @@ final class DetailEventDataSource: NSObject, UITableViewDataSource {
         switch section {
         case 0: return 1
         case 1: return 1
-        case 2: return viewModel.paravetersOfEvent[KeyProperties.parameters]?.count ?? 1
+        case 2: return viewModel.paravetersOfEvent[R.KeyProperties.parameters]?.count ?? 1
         default:
             return 1
         }
@@ -30,35 +30,33 @@ final class DetailEventDataSource: NSObject, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: DetailEventTableCell.identifier,
-            for: indexPath) as? DetailEventTableCell else { fatalError("DetailCell nil") }
+            withIdentifier: DetailTableViewCell.identifier,
+            for: indexPath) as? DetailTableViewCell else { fatalError("DetailCell nil") }
         
         cell.selectionStyle = .none
         
+        
         switch indexPath.section {
         case 0:
-            if let eventID = viewModel.paravetersOfEvent[KeyProperties.id] {
-                cell.removeTextView()
+            if let eventID = viewModel.paravetersOfEvent[R.KeyProperties.id] {
                 cell.titleLabel.text = eventID[indexPath.row]
             }
             
         case 1:
-            if let timeEvent = viewModel.paravetersOfEvent[KeyProperties.createAt] {
-                cell.removeTextView()
+            if let timeEvent = viewModel.paravetersOfEvent[R.KeyProperties.createAt] {
                 cell.titleLabel.text = timeEvent[indexPath.row]
             }
             
         case 2:
-            if let parameters = viewModel.paravetersOfEvent[KeyProperties.parameters] {
-                
+            if let parameters = viewModel.paravetersOfEvent[R.KeyProperties.parameters] {
+                cell.resetConstraint()
                 if !parameters.isEmpty {
-                    cell.titleLabel.text = viewModel.titleParameter[indexPath.row]
+                    cell.titleLabel.text = viewModel.titlesParameter[indexPath.row]
                     cell.textView.text = parameters[indexPath.row]
                 }
                 
             }  else {
-                cell.removeTextView()
-                cell.titleLabel.text = ErrorTitle.noParameter
+                cell.titleLabel.text = R.ErrorTitle.noParameter
             }
         default:
             break
@@ -68,7 +66,7 @@ final class DetailEventDataSource: NSObject, UITableViewDataSource {
     }
     
      func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-         let section = viewModel.titleSection[section]
+         let section = viewModel.titlesSection[section]
     return section
     }
 }

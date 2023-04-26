@@ -11,10 +11,24 @@
 "parameterEvent" = "Parameters Event";
 
 // Title parameter
-"key" = "Key parameter";
-"string" = "String parameter";
-"int" = "Integer parameter";
-"bool" = "Boolean parameter";
+"key" = "Key";
+"string" = "String";
+"int" = "Integer";
+"bool" = "Boolean";
 
 // Error title
 "noParameter" = "There are no parameters";
+"noEvent" = "There are no events";
+
+// Headers for the Add event screen
+"enterID" = "Enter the event ID";
+"enterDate" = "Enter the date and time of the event";
+"enterKey" = "Enter the key";
+"EnterString" = "Enter the title";
+"EnterInt" = "Enter integer";
+"EnterBool" = "Enter Boolean";
+
+// Title alert
+"titleID" = "Enter ID";
+"titleDate" = "Enter Date";
+

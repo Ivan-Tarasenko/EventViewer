@@ -10,8 +10,8 @@ import CoreData
 
 protocol DetailEventModelProtocol: AnyObject {
     var paravetersOfEvent: [String: [String]] { get }
-    var titleSection: [String] { get }
-    var titleParameter: [String] { get }
+    var titlesSection: [String] { get }
+    var titlesParameter: [String] { get }
 }
 
 final class DetailEventViewModel: DetailEventModelProtocol {
@@ -19,8 +19,8 @@ final class DetailEventViewModel: DetailEventModelProtocol {
     let eventManager: EventManager
     let indexCell: Int
     var paravetersOfEvent: [String: [String]] = [:]
-    var titleSection: [String] = []
-    var titleParameter: [String] = []
+    var titlesSection: [String] = []
+    var titlesParameter: [String] = []
     
     init(eventManager: EventManager, indexCell: Int) {
         self.eventManager = eventManager
@@ -32,16 +32,16 @@ final class DetailEventViewModel: DetailEventModelProtocol {
     }
     
     private func addTitleSection() {
-        titleSection.append(LocalizationString.idEvent)
-        titleSection.append(LocalizationString.dateEvent)
-        titleSection.append(LocalizationString.parameterEvent)
+        titlesSection.append(R.LocalizationString.idEvent)
+        titlesSection.append(R.LocalizationString.dateEvent)
+        titlesSection.append(R.LocalizationString.parameterEvent)
     }
     
     private func addTitleParameter() {
-        titleParameter.append(LocalizationString.key)
-        titleParameter.append(LocalizationString.string)
-        titleParameter.append(LocalizationString.int)
-        titleParameter.append(LocalizationString.bool)
+        titlesParameter.append(R.LocalizationString.key)
+        titlesParameter.append(R.LocalizationString.string)
+        titlesParameter.append(R.LocalizationString.int)
+        titlesParameter.append(R.LocalizationString.bool)
         
     }
     
@@ -49,27 +49,27 @@ final class DetailEventViewModel: DetailEventModelProtocol {
         guard !eventManager.events.isEmpty else { return }
         
         
-        if let id = eventManager.events[index].value(forKey: KeyProperties.id) as? String {
-            paravetersOfEvent[KeyProperties.id] = [id]
+        if let id = eventManager.events[index].value(forKey: R.KeyProperties.id) as? String {
+            paravetersOfEvent[R.KeyProperties.id] = [id]
         }
         
-        if let createAt = eventManager.events[index].value(forKey: KeyProperties.createAt) as? Date {
+        if let createAt = eventManager.events[index].value(forKey: R.KeyProperties.createAt) as? Date {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
             let timeString = dateFormatter.string(from: createAt)
-            paravetersOfEvent[KeyProperties.createAt] = [timeString]
+            paravetersOfEvent[R.KeyProperties.createAt] = [timeString]
         }
         
         
-        if let parameters = eventManager.events[index].value(forKey: KeyProperties.parameters) as? Set<DBParameter> {
+        if let parameters = eventManager.events[index].value(forKey: R.KeyProperties.parameters) as? Set<DBParameter> {
             
             for parameter in parameters {
                 
                 // getting all the event parameters
-                let key = parameter.value(forKey: KeyParameters.key) as? String
-                let stringValue = parameter.value(forKey: KeyParameters.stringValue) as? String
-                let integerValue = parameter.value(forKey: KeyParameters.integerValue) as? Int
-                let booleanValue = parameter.value(forKey: KeyParameters.booleanValue) as? Bool
+                let key = parameter.value(forKey: R.KeyParameters.key) as? String
+                let stringValue = parameter.value(forKey: R.KeyParameters.stringValue) as? String
+                let integerValue = parameter.value(forKey: R.KeyParameters.integerValue) as? Int
+                let booleanValue = parameter.value(forKey: R.KeyParameters.booleanValue) as? Bool
                 
                 // encode all parameters in JSONE format
                 let encodedKey = try! JSONEncoder().encode(key)
@@ -84,7 +84,7 @@ final class DetailEventViewModel: DetailEventModelProtocol {
                 let jsonBool = String(data: encodedBool, encoding: .utf8)
                 
                 // adding all parameters to the dictionary
-                paravetersOfEvent[KeyProperties.parameters] = [jsonKey!, jsonString!, jsonInt!, jsonBool!]
+                paravetersOfEvent[R.KeyProperties.parameters] = [jsonKey!, jsonString!, jsonInt!, jsonBool!]
             }
         }
     }

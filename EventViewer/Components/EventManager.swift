@@ -74,7 +74,7 @@ public final class EventManager: NSPersistentContainer {
     public func deleteEvent(index: Int) {
         
         let context = viewContext
-        let parameterSet = events[index].value(forKey: KeyProperties.parameters) as? NSSet ?? NSSet()
+        let parameterSet = events[index].value(forKey: R.KeyProperties.parameters) as? NSSet ?? NSSet()
         
         context.delete(events[index])
         events.remove(at: index)

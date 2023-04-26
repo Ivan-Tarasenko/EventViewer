@@ -60,7 +60,7 @@ final class DetailEventViewController: UITableViewController {
         navigationItem.leftBarButtonItem = self.deleteButtonItem
         navigationItem.rightBarButtonItem = self.cancelButtonItem
         navigationItem.title = "Event Details"
-        tableView.register(DetailEventTableCell.self, forCellReuseIdentifier: DetailEventTableCell.identifier)
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: DetailTableViewCell.identifier)
     }
     
     private func bing() {

@@ -31,13 +31,13 @@ final class EventListViewModel: EventListModelProtorol {
     }
     
     func eventID(index: Int) -> String? {
-        guard !allEvents.isEmpty else { return "No Events" }
-        return allEvents[index].value(forKey: KeyProperties.id) as? String
+        guard !allEvents.isEmpty else { return R.ErrorTitle.noEvent }
+        return allEvents[index].value(forKey: R.KeyProperties.id) as? String
     }
     
     func eventDate(index: Int) -> String? {
-        guard !allEvents.isEmpty else { return "No Date" }
-        guard let eventDate = allEvents[index].value(forKey: KeyProperties.createAt) as? Date else { return "Not Date" }
+        guard !allEvents.isEmpty else { return "00/00/0000 00:00" }
+        guard let eventDate = allEvents[index].value(forKey: R.KeyProperties.createAt) as? Date else { return "00/00/0000 00:00" }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
         let timeString = dateFormatter.string(from: eventDate)
@@ -61,7 +61,7 @@ final class EventListViewModel: EventListModelProtorol {
     func search(searchText: String) {
         
         for (index, event) in allEvents.enumerated() where
-        event.value(forKey: KeyProperties.id) as? String ~= searchText {
+        event.value(forKey: R.KeyProperties.id) as? String ~= searchText {
             
             let removeItem = allEvents.remove(at: index)
             allEvents.insert(removeItem, at: 0)

@@ -111,6 +111,17 @@ class EventsListViewController: UITableViewController {
     @objc
     private func addEvent() {
         
+        let AddEventVC = AddEventViewController(
+            dataSource: AddEventDataSource(),
+            delegate: AddEventDelegate()
+        )
+        
+        AddEventVC.eventManager = self.eventManager
+        
+        let navVC = UINavigationController(rootViewController: AddEventVC)
+        navVC.modalPresentationStyle = .fullScreen
+        
+        self.present(navVC, animated: true)
     }
     
     @objc
