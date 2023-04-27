@@ -67,7 +67,7 @@ class EventsListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        eventManager.capture(.viewScreen("EVENTS_LIST"))
+//        eventManager.capture(.viewScreen("EVENTS_LIST"))
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -117,6 +117,11 @@ class EventsListViewController: UITableViewController {
         )
         
         AddEventVC.eventManager = self.eventManager
+        
+        AddEventVC.onReloadData = { [weak self] in
+            guard let self else { return }
+            self.reloadData()
+        }
         
         let navVC = UINavigationController(rootViewController: AddEventVC)
         navVC.modalPresentationStyle = .fullScreen

@@ -16,6 +16,8 @@
 		1A26D2B629EDAE0C008185DF /* DetailEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A26D2B529EDAE0C008185DF /* DetailEventViewModel.swift */; };
 		1A6B315E29E4992E0013DB8F /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6B315D29E4992E0013DB8F /* TableViewCell.swift */; };
 		1A6B316029E530070013DB8F /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6B315F29E530070013DB8F /* EventListViewModel.swift */; };
+		1A834A8C29F9811300E34CAA /* DateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A834A8B29F9811300E34CAA /* DateView.swift */; };
+		1A94995229F9B9C40025744D /* UIViewController+HideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94995129F9B9C40025744D /* UIViewController+HideKeyboard.swift */; };
 		1ADB53B829F15D58005CB79D /* AddEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB53B729F15D58005CB79D /* AddEventViewController.swift */; };
 		1ADB53BA29F15E44005CB79D /* AddEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB53B929F15E44005CB79D /* AddEventViewModel.swift */; };
 		1ADB53BD29F15EE5005CB79D /* AddEventDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB53BC29F15EE5005CB79D /* AddEventDataSource.swift */; };
@@ -49,6 +51,8 @@
 		1A26D2B529EDAE0C008185DF /* DetailEventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailEventViewModel.swift; sourceTree = "<group>"; };
 		1A6B315D29E4992E0013DB8F /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		1A6B315F29E530070013DB8F /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
+		1A834A8B29F9811300E34CAA /* DateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateView.swift; sourceTree = "<group>"; };
+		1A94995129F9B9C40025744D /* UIViewController+HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+HideKeyboard.swift"; sourceTree = "<group>"; };
 		1ADB53B729F15D58005CB79D /* AddEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventViewController.swift; sourceTree = "<group>"; };
 		1ADB53B929F15E44005CB79D /* AddEventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventViewModel.swift; sourceTree = "<group>"; };
 		1ADB53BC29F15EE5005CB79D /* AddEventDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventDataSource.swift; sourceTree = "<group>"; };
@@ -96,13 +100,6 @@
 			path = DetailEvent;
 			sourceTree = "<group>";
 		};
-		1A26D2AD29EDA420008185DF /* CustomTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CustomTableViewCell;
-			sourceTree = "<group>";
-		};
 		1A26D2B029EDA51A008185DF /* TableViewDelegates */ = {
 			isa = PBXGroup;
 			children = (
@@ -111,14 +108,6 @@
 				1A26D2B329EDAAB1008185DF /* DetailEventDelegate.swift */,
 			);
 			path = TableViewDelegates;
-			sourceTree = "<group>";
-		};
-		1A3D6BB629F15B880081444E /* CustomUI */ = {
-			isa = PBXGroup;
-			children = (
-				1A26D2AD29EDA420008185DF /* CustomTableViewCell */,
-			);
-			path = CustomUI;
 			sourceTree = "<group>";
 		};
 		1A6B316129E5300D0013DB8F /* EventList */ = {
@@ -139,11 +128,20 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		1A834A8A29F980D500E34CAA /* UIComponents */ = {
+			isa = PBXGroup;
+			children = (
+				1A834A8B29F9811300E34CAA /* DateView.swift */,
+			);
+			path = UIComponents;
+			sourceTree = "<group>";
+		};
 		1ADB53B629F15D26005CB79D /* AddEvent */ = {
 			isa = PBXGroup;
 			children = (
 				1ADB53B729F15D58005CB79D /* AddEventViewController.swift */,
 				1ADB53B929F15E44005CB79D /* AddEventViewModel.swift */,
+				1A834A8A29F980D500E34CAA /* UIComponents */,
 				1ADB53BB29F15EC4005CB79D /* TableViewDelegates */,
 			);
 			path = AddEvent;
@@ -203,7 +201,6 @@
 				F3CB02E82982E9810078A0F9 /* Entities */,
 				F3CB02D32982E91D0078A0F9 /* Components */,
 				F3CB02FA2982F1B00078A0F9 /* Scenes */,
-				1A3D6BB629F15B880081444E /* CustomUI */,
 			);
 			path = EventViewer;
 			sourceTree = "<group>";
@@ -233,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				F3CB02EC2982E9CD0078A0F9 /* CoreData+Utilities.swift */,
+				1A94995129F9B9C40025744D /* UIViewController+HideKeyboard.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -344,6 +342,7 @@
 				F3CB02F22982EBAB0078A0F9 /* AppDelegate.swift in Sources */,
 				F3CB02F62982EC100078A0F9 /* EventsListViewController.swift in Sources */,
 				1A26D2AC29EDA1DE008185DF /* DetailEventViewController.swift in Sources */,
+				1A834A8C29F9811300E34CAA /* DateView.swift in Sources */,
 				1ADB53BF29F15F7C005CB79D /* AddEventDelegate.swift in Sources */,
 				F3CB02F42982EBC60078A0F9 /* SceneDelegate.swift in Sources */,
 				1A26D2B629EDAE0C008185DF /* DetailEventViewModel.swift in Sources */,
@@ -359,6 +358,7 @@
 				1A6B316029E530070013DB8F /* EventListViewModel.swift in Sources */,
 				F3CB02E12982E91D0078A0F9 /* EventRegistry.swift in Sources */,
 				1A1595C429F069ED00211522 /* Resources.swift in Sources */,
+				1A94995229F9B9C40025744D /* UIViewController+HideKeyboard.swift in Sources */,
 				1ADB53C129F1696C005CB79D /* AddEventTableViewCell.swift in Sources */,
 				1ADB53BD29F15EE5005CB79D /* AddEventDataSource.swift in Sources */,
 				1A26D2AF29EDA465008185DF /* DetailTableViewCell.swift in Sources */,

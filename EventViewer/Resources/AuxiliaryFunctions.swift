@@ -29,6 +29,7 @@ final class AuxiliaryFunctions {
         alert.addTextField { textField in
             textField.delegate = view as? any UITextFieldDelegate
             textField.autocapitalizationType = .allCharacters
+            textField.keyboardType = .asciiCapable
             textField.placeholder = "Enter ..."
         }
         
