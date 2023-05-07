@@ -21,11 +21,11 @@ final class DetailEventDataSource: NSObject, UITableViewDataSource {
         switch section {
         case 0: return 1
         case 1: return 1
-        case 2: return viewModel.paravetersOfEvent[R.KeyProperties.parameters]?.count ?? 1
+        case 2: return viewModel.entityEvent?.parameter != nil ? 4 : 1
         default:
             return 1
         }
-       
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -35,28 +35,34 @@ final class DetailEventDataSource: NSObject, UITableViewDataSource {
         
         cell.selectionStyle = .none
         
+        cell.textView.tag = indexPath.row
         
         switch indexPath.section {
         case 0:
-            if let eventID = viewModel.paravetersOfEvent[R.KeyProperties.id] {
-                cell.titleLabel.text = eventID[indexPath.row]
-            }
+            cell.titleLabel.text = viewModel.entityEvent?.id
             
         case 1:
-            if let timeEvent = viewModel.paravetersOfEvent[R.KeyProperties.createAt] {
-                cell.titleLabel.text = timeEvent[indexPath.row]
-            }
+            cell.titleLabel.text = viewModel.entityEvent?.date
             
         case 2:
-            if let parameters = viewModel.paravetersOfEvent[R.KeyProperties.parameters] {
-                cell.resetConstraint()
-                if !parameters.isEmpty {
-                    cell.titleLabel.text = viewModel.titlesParameter[indexPath.row]
-                    cell.textView.text = parameters[indexPath.row]
+            cell.resetConstraint()
+            
+            if viewModel.entityEvent?.parameter != nil {
+                cell.titleLabel.text = viewModel.titlesParameter[indexPath.row]
+                
+                switch cell.textView.tag {
+                case 0: cell.textView.text = viewModel.entityEvent?.parameter?.key
+                case 1: cell.textView.text = viewModel.entityEvent?.parameter?.string
+                case 2: cell.textView.text = viewModel.entityEvent?.parameter?.int
+                case 3: cell.textView.text = viewModel.entityEvent?.parameter?.bool
+                default:
+                    break
                 }
                 
             }  else {
-                cell.titleLabel.text = R.ErrorTitle.noParameter
+                
+                cell.hideParameters()
+                
             }
         default:
             break
@@ -65,8 +71,8 @@ final class DetailEventDataSource: NSObject, UITableViewDataSource {
         return cell
     }
     
-     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-         let section = viewModel.titlesSection[section]
-    return section
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let section = viewModel.titlesSection[section]
+        return section
     }
 }

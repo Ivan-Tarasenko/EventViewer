@@ -19,6 +19,8 @@ enum R {
         static let stringValue = "stringValue"
         static let integerValue = "integerValue"
         static let booleanValue = "booleanValue"
+        static let arrayValue = "arrayValue"
+        
     }
 
     enum LocalizationString {

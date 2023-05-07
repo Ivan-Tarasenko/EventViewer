@@ -56,6 +56,19 @@ final class DetailTableViewCell: UITableViewCell {
             make.trailing.equalTo(-10)
         }
     }
+    
+    func hideParameters() {
+        textView.backgroundColor = .blue
+        textView.removeFromSuperview()
+        titleLabel.text = R.ErrorTitle.noParameter
+        
+        titleLabel.snp.removeConstraints()
+        titleLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(self)
+            make.leading.equalTo(10)
+            make.trailing.equalTo(-10)
+        }
+    }
 }
 
 // MARK: - Private function

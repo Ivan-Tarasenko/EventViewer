@@ -45,7 +45,7 @@ final class DetailEventViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        eventManager.capture(.detailScreen("DETAIL_OF_EVENT"))
+        eventManager.capture(.detailScreen("DETAIL_OF_EVENT"))
     }
     
     override func viewDidLoad() {

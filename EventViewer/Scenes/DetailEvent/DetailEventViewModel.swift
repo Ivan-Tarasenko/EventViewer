@@ -9,18 +9,34 @@ import Foundation
 import CoreData
 
 protocol DetailEventModelProtocol: AnyObject {
-    var paravetersOfEvent: [String: [String]] { get }
     var titlesSection: [String] { get }
     var titlesParameter: [String] { get }
+    
+    var entityEvent: EntityEvent? { get }
+}
+
+
+struct EntityEvent {
+    var id: String?
+    var date: String?
+    var parameter: EntityParameter?
+}
+
+struct EntityParameter {
+    var key: String?
+    var string: String?
+    var int: String?
+    var bool: String?
 }
 
 final class DetailEventViewModel: DetailEventModelProtocol {
     
     let eventManager: EventManager
     let indexCell: Int
-    var paravetersOfEvent: [String: [String]] = [:]
     var titlesSection: [String] = []
     var titlesParameter: [String] = []
+    
+    var entityEvent: EntityEvent?
     
     init(eventManager: EventManager, indexCell: Int) {
         self.eventManager = eventManager
@@ -29,6 +45,9 @@ final class DetailEventViewModel: DetailEventModelProtocol {
         addTitleSection()
         addTitleParameter()
         getParaneterOfEvent(index: indexCell)
+        
+        
+        
     }
     
     private func addTitleSection() {
@@ -48,16 +67,19 @@ final class DetailEventViewModel: DetailEventModelProtocol {
     private func getParaneterOfEvent(index: Int) {
         guard !eventManager.events.isEmpty else { return }
         
+        var id: String?
+        var date: String?
+        var eventParameter: EntityParameter?
         
-        if let id = eventManager.events[index].value(forKey: R.KeyProperties.id) as? String {
-            paravetersOfEvent[R.KeyProperties.id] = [id]
+        if let idEvent = eventManager.events[index].value(forKey: R.KeyProperties.id) as? String {
+            id = idEvent
         }
         
         if let createAt = eventManager.events[index].value(forKey: R.KeyProperties.createAt) as? Date {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
             let timeString = dateFormatter.string(from: createAt)
-            paravetersOfEvent[R.KeyProperties.createAt] = [timeString]
+            date = timeString
         }
         
         
@@ -67,25 +89,45 @@ final class DetailEventViewModel: DetailEventModelProtocol {
                 
                 // getting all the event parameters
                 let key = parameter.value(forKey: R.KeyParameters.key) as? String
-                let stringValue = parameter.value(forKey: R.KeyParameters.stringValue) as? String
-                let integerValue = parameter.value(forKey: R.KeyParameters.integerValue) as? Int
-                let booleanValue = parameter.value(forKey: R.KeyParameters.booleanValue) as? Bool
+                var stringValue = parameter.value(forKey: R.KeyParameters.stringValue) as? String
+                var integerValue = parameter.value(forKey: R.KeyParameters.integerValue) as? Int
+                var booleanValue = parameter.value(forKey: R.KeyParameters.booleanValue) as? Bool
+                let arrayValue = parameter.value(forKey: R.KeyParameters.arrayValue) as? Set<DBParameter>
+                
+                if let parameters = arrayValue {
+                    for parameter in parameters {
+                        
+                        if let string = parameter.value(forKey: R.KeyParameters.stringValue) as? String {
+                            stringValue = string
+                        }
+                        
+                        if let integer = parameter.value(forKey: R.KeyParameters.integerValue) as? Int {
+                            if integer > 0 {
+                                integerValue = integer
+                            }
+                        }
+                        
+                        if let boolean = parameter.value(forKey: R.KeyParameters.booleanValue) as? Bool {
+                            booleanValue = boolean
+                        }
+                    }
+                }
+                
                 
                 // encode all parameters in JSONE format
-                let encodedKey = try! JSONEncoder().encode(key)
-                let encodedString = try! JSONEncoder().encode(stringValue)
                 let encodedInt = try! JSONEncoder().encode(integerValue)
                 let encodedBool = try! JSONEncoder().encode(booleanValue)
-                
+
                 // extracting data in String
-                let jsonKey = String(data: encodedKey, encoding: .utf8)
-                let jsonString = String(data: encodedString, encoding: .utf8)
                 let jsonInt = String(data: encodedInt, encoding: .utf8)
                 let jsonBool = String(data: encodedBool, encoding: .utf8)
                 
-                // adding all parameters to the dictionary
-                paravetersOfEvent[R.KeyProperties.parameters] = [jsonKey!, jsonString!, jsonInt!, jsonBool!]
+                let parameter = EntityParameter(key: key, string: stringValue, int: jsonInt, bool: jsonBool)
+                eventParameter = parameter
             }
         }
+        
+        entityEvent = EntityEvent(id: id, date: date, parameter: eventParameter)
+        
     }
 }

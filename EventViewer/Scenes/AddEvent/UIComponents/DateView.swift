@@ -64,7 +64,6 @@ private extension DateView {
     
     @objc
     private func okButtonPressed() {
-        print("ok")
         onActionOkButton?(datePicker.date)
     }
 }

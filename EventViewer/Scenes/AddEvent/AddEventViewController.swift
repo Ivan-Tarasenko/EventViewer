@@ -14,7 +14,7 @@ final class AddEventViewController: UITableViewController {
         title: "Create",
         style: .plain,
         target: self,
-        action: #selector(AddEventViewController.createEvent)
+        action: #selector(AddEventViewController.pressedCreateEvent)
     )
     
     private lazy var cancelButtonItem = UIBarButtonItem(
@@ -25,12 +25,13 @@ final class AddEventViewController: UITableViewController {
     )
     
     // MARK: - Variables
+    var onReloadData: (() -> Void)?
     let auxiliaryFunctions = AuxiliaryFunctions.shared
     var eventManager: EventManager!
     
     private let dataSource: AddEventDataSource
     private let delegate: AddEventDelegate
-    private var viewModel: AddEventViewModel!
+    private var viewModel: AddEventModelProtocol?
     
     // MARK: - LifeCycle
     init(dataSource: AddEventDataSource, delegate: AddEventDelegate) {
@@ -45,12 +46,12 @@ final class AddEventViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        eventManager.capture(.detailScreen("DETAIL_OF_EVENT"))
+        eventManager.capture(.createEventScreen("CREATE_NEW _EVENT"))
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel = AddEventViewModel(eventManager: eventManager)
+        viewModel = AddEventViewModel()
         configerUI()
         bing()
         tapCell()
@@ -72,7 +73,10 @@ final class AddEventViewController: UITableViewController {
     
     // MARK: - Actions
     @objc
-    private func createEvent() {
+    private func pressedCreateEvent() {
+        if let event = viewModel?.createEvent() {
+            eventManager.capture(event)
+        }
         
         dismiss(animated: true)
     }
@@ -87,26 +91,27 @@ final class AddEventViewController: UITableViewController {
             guard let self else { return }
             switch section {
             case 0: self.EnterID()
-            case 1: print("1")
-            case 2: print("2")
+            case 1: self.enterDate()
+            case 2: self.hideKeyboard()
             default:
                 break
             }
         }
     }
-
+    
+    
     // MARK: - Additional functions
     private func EnterID() {
-        auxiliaryFunctions.showAlert(on: self, title: R.TitleAlert.titleID,massage: R.CreateEvent.enterID) { text in
-             print(text)
-         }
+        auxiliaryFunctions.showAlert(on: self, title: R.TitleAlert.titleID,massage: R.CreateEvent.enterID) { [weak self] text in
+            guard let self else { return }
+            self.viewModel?.titleEvent = text
+            self.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+        }
     }
-}
-
-
-extension AddEventViewController: UITextFieldDelegate {
     
-     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-         return "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".lowercased().contains(string.lowercased())
+    private func enterDate() {
+        viewModel?.isShowDatePicker = true
+        self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
     }
 }
+

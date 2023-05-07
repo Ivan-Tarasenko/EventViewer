@@ -34,18 +34,56 @@ final class AddEventDataSource: NSObject, UITableViewDataSource {
         
         cell.selectionStyle = .none
         
+        cell.textView.tag = indexPath.row
+        
+        cell.onKey = { [weak self] key in
+            guard let self else { return }
+            self.viewModel.key = key
+        }
+        
+        cell.onString = { [weak self] string in
+            guard let self else { return }
+            self.viewModel.strValue = string
+        }
+        
+        cell.onInt = { [weak self] int in
+            guard let self else { return }
+            self.viewModel.intValue = int
+        }
+        
+        cell.onBool = { [weak self] bool in
+            guard let self else { return }
+            self.viewModel.boolValue = bool
+        }
+        
+        cell.onDate = { [weak self] date in
+            guard let self else { return }
+            self.viewModel.dateEvent = date
+        }
+        
         switch indexPath.section {
         case 0:
-            cell.titleLabel.text = R.CreateEvent.enterID
+         
+            if viewModel.changeTitleEvent() {
+                cell.titleLabel.text = viewModel.titleEvent!
+            } else {
+                cell.titleLabel.text = R.CreateEvent.enterID
+            }
             
         case 1:
             
-            cell.titleLabel.text = R.CreateEvent.enterDate
+            if viewModel.isShowDatePicker {
+                cell.dateView.isHidden = false
+                cell.titleLabel.text?.removeAll()
+            } else {
+                cell.titleLabel.text = R.CreateEvent.enterDate
+            }
             
         case 2:
             cell.resetConstraint()
             cell.titleLabel.text = viewModel.titlesEnterParameter[indexPath.row]
-
+            cell.setLowercaseLetter()
+            
         default:
             break
         }

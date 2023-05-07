@@ -67,7 +67,7 @@ class EventsListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        eventManager.capture(.viewScreen("EVENTS_LIST"))
+        eventManager.capture(.viewScreen("EVENTS_LIST"))
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -187,7 +187,6 @@ class EventsListViewController: UITableViewController {
         viewModel.reloadData { [weak self] in
             guard let self else { return }
             self.tableView.reloadData()
-            self.tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         }
     }
     
