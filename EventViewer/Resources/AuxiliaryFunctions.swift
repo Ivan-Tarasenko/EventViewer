@@ -43,4 +43,18 @@ final class AuxiliaryFunctions {
         alert.addAction(create)
         view.present(alert, animated: true)
     }
+    
+    func showAlertClear(on view: UIViewController, title: String, massage: String, completion: @escaping () -> Void) {
+        let alert = UIAlertController(title: title, message: massage, preferredStyle: .alert)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .default)
+        let create = UIAlertAction(title: "Clear", style: .default) { action in
+            completion()
+        }
+
+        alert.addAction(cancel)
+        alert.addAction(create)
+        view.present(alert, animated: true)
+    }
+    
 }

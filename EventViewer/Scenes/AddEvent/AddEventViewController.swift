@@ -26,12 +26,12 @@ final class AddEventViewController: UITableViewController {
     
     // MARK: - Variables
     var onReloadData: (() -> Void)?
-    let auxiliaryFunctions = AuxiliaryFunctions.shared
     var eventManager: EventManager!
     
     private let dataSource: AddEventDataSource
     private let delegate: AddEventDelegate
     private var viewModel: AddEventModelProtocol?
+    private let auxiliaryFunctions = AuxiliaryFunctions.shared
     
     // MARK: - LifeCycle
     init(dataSource: AddEventDataSource, delegate: AddEventDelegate) {

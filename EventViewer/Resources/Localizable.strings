@@ -28,7 +28,11 @@
 "EnterInt" = "Enter integer";
 "EnterBool" = "Enter Boolean";
 
-// Title alert
+// Title alert add event
 "titleID" = "Enter ID";
 "titleDate" = "Enter Date";
+
+// Title alert clear list
+"titleClear" = "Attention";
+"massageClear" = "You're going to completely clear the event list!";
 

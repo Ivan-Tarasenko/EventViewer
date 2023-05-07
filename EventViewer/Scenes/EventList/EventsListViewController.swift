@@ -42,6 +42,7 @@ class EventsListViewController: UITableViewController {
     private let eventManager: EventManager
     private let dataSource: TableViewDataSource
     private let delegate: TableViewDelegate
+    private let auxiliaryFunctions = AuxiliaryFunctions.shared
     
     // MARK: - Lifecycle
     init(eventManager: EventManager, dataSourse: TableViewDataSource, delegate: TableViewDelegate) {
@@ -131,12 +132,18 @@ class EventsListViewController: UITableViewController {
     
     @objc
     private func cleanList() {
-        eventManager.clean { error in
-            if (error != nil) {
-                print(error.debugDescription)
-                return
+        auxiliaryFunctions.showAlertClear (
+            on: self,
+            title: R.TitleAlertClear.titleClear,
+            massage: R.TitleAlertClear.massageClear
+        ) {
+            self.eventManager.clean { error in
+                if (error != nil) {
+                    print(error.debugDescription)
+                    return
+                }
+                self.reloadData()
             }
-            self.reloadData()
         }
     }
     

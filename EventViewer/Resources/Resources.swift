@@ -52,5 +52,9 @@ enum R {
         static let titleID = NSLocalizedString("titleID", comment: "")
         static let titleDate = NSLocalizedString("titleDate", comment: "")
     }
-
+    
+    enum TitleAlertClear {
+        static let titleClear = NSLocalizedString("titleClear", comment: "")
+        static let  massageClear = NSLocalizedString("massageClear", comment: "")
+    }
 }
