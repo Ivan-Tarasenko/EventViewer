@@ -1,5 +1,5 @@
 //
-//  DetailEventTableCell.swift
+//  DetailTableViewCell.swift
 //  EventViewer
 //
 //  Created by Иван Тарасенко on 17.04.2023.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class DetailEventTableCell: UITableViewCell {
+final class DetailTableViewCell: UITableViewCell {
     
     static var identifier: String {
         return String(describing: self)
@@ -38,12 +38,12 @@ final class DetailEventTableCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func addSubview() {
-        addSubview(titleLabel)
+    func resetConstraint() {
+        
+        titleLabel.snp.removeConstraints()
+        
         contentView.addSubview(textView)
-    }
-    
-    private func addConstraint() {
+        
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalTo(self)
             make.leading.equalTo(10)
@@ -57,7 +57,31 @@ final class DetailEventTableCell: UITableViewCell {
         }
     }
     
-    func removeTextView() {
+    func hideParameters() {
+        textView.backgroundColor = .blue
         textView.removeFromSuperview()
+        titleLabel.text = R.ErrorTitle.noParameter
+        
+        titleLabel.snp.removeConstraints()
+        titleLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(self)
+            make.leading.equalTo(10)
+            make.trailing.equalTo(-10)
+        }
+    }
+}
+
+// MARK: - Private function
+private extension DetailTableViewCell {
+    
+    func addSubview() {
+        contentView.addSubview(titleLabel)
+        
+    }
+    
+    func addConstraint() {
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalTo(self)
+        }
     }
 }

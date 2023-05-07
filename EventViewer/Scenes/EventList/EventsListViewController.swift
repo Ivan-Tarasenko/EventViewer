@@ -111,6 +111,22 @@ class EventsListViewController: UITableViewController {
     @objc
     private func addEvent() {
         
+        let AddEventVC = AddEventViewController(
+            dataSource: AddEventDataSource(),
+            delegate: AddEventDelegate()
+        )
+        
+        AddEventVC.eventManager = self.eventManager
+        
+        AddEventVC.onReloadData = { [weak self] in
+            guard let self else { return }
+            self.reloadData()
+        }
+        
+        let navVC = UINavigationController(rootViewController: AddEventVC)
+        navVC.modalPresentationStyle = .fullScreen
+        
+        self.present(navVC, animated: true)
     }
     
     @objc
@@ -171,7 +187,6 @@ class EventsListViewController: UITableViewController {
         viewModel.reloadData { [weak self] in
             guard let self else { return }
             self.tableView.reloadData()
-            self.tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
         }
     }
     

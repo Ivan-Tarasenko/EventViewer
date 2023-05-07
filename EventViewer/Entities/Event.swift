@@ -10,10 +10,12 @@ import Foundation
 public struct Event: Identifiable {
 
     public let id: String
+    public var date: Date
     public var parameters: ParameterSet
 
-    public init(id: String, parameters: ParameterSet = [:]) {
+    public init(id: String, date: Date = Date(), parameters: ParameterSet = [:]) {
         self.id = id
+        self.date = date
         self.parameters = parameters
     }
 

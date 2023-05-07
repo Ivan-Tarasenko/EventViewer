@@ -28,8 +28,6 @@ public final class EventManager: NSPersistentContainer {
                 print("PersistantEventManager successfully loaded")
             }
         })
-        
-//        print(self.persistentStoreDescriptions.first?.url)
     }
     
     // сохронение события в БД
@@ -37,17 +35,20 @@ public final class EventManager: NSPersistentContainer {
         performBackgroundTask({ context in
             let newRecord = DBEvent(context: context)
             newRecord.id = event.id
-            newRecord.createdAt = Date()
+            newRecord.createdAt = event.date
+            
             if !event.parameters.isEmpty {
                 newRecord.parameters = Set(event.parameters.map({
-                    DBParameter(parameter: $0, context: context)
+                    return DBParameter(parameter: $0, context: context)
                 }))
             }
+            
             do {
                 try context.save()
             } catch {
                 print("Error:", error.localizedDescription)
             }
+            
         })
     }
     
@@ -74,7 +75,7 @@ public final class EventManager: NSPersistentContainer {
     public func deleteEvent(index: Int) {
         
         let context = viewContext
-        let parameterSet = events[index].value(forKey: KeyProperties.parameters) as? NSSet ?? NSSet()
+        let parameterSet = events[index].value(forKey: R.KeyProperties.parameters) as? NSSet ?? NSSet()
         
         context.delete(events[index])
         events.remove(at: index)

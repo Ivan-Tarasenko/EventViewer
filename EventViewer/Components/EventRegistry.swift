@@ -27,6 +27,12 @@ public extension Event {
             "SCREEN_ID": .string(screenId)
         ])
     }
+    
+    static func createEventScreen(_ screenId: String) -> Event {
+        Event(id: "CREATE_EVENT_SCREEN", parameters: [
+            "SCREEN_ID": .string(screenId)
+        ])
+    }
 
     static func viewScreen(_ screenId: String) -> Event {
         Event(id: "VIEW_SCREEN", parameters: [
