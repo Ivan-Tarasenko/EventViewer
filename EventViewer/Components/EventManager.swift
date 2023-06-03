@@ -13,7 +13,8 @@ public final class EventManager: NSPersistentContainer {
     
     public let queue = DispatchQueue(label: "com.simla.PersistantEventManager", qos: .default)
     
-    var events: [NSManagedObject] = []
+    var limitEvents: [NSManagedObject] = []
+    var allEvents: [NSManagedObject] = []
     
     public init() {
         super.init(name: "PersistantEventManagerDB", managedObjectModel: Self.model)
@@ -24,8 +25,6 @@ public final class EventManager: NSPersistentContainer {
         loadPersistentStores(completionHandler: { _, error in
             if let error {
                 fatalError(error.localizedDescription)
-            } else {
-                print("PersistantEventManager successfully loaded")
             }
         })
     }
@@ -52,9 +51,9 @@ public final class EventManager: NSPersistentContainer {
         })
     }
     
-    public func getEvents(n: Int = 0) {
+    public func getLimitEvents(n: Int = 0) {
         
-        var allEvents: [NSManagedObject] = []
+        var limitAllEvents: [NSManagedObject] = []
         let request = DBEvent.makeFetchRequest()
         let sort = NSSortDescriptor(key: #keyPath(DBEvent.createdAt), ascending: false)
         request.sortDescriptors = [sort]
@@ -62,23 +61,40 @@ public final class EventManager: NSPersistentContainer {
         
         queue.sync {
             do {
-                allEvents = try viewContext.fetch(request)
+                limitAllEvents = try viewContext.fetch(request)
             } catch let error as NSError {
                 print("Coud not fetch \(error), \(error.userInfo)")
             }
         }
         
-        events = allEvents
+        limitEvents = limitAllEvents
+        
+    }
+    
+    public func getEvents() {
+        
+        var events: [NSManagedObject] = []
+        let request = DBEvent.makeFetchRequest()
+        
+        queue.sync {
+            do {
+                events = try viewContext.fetch(request)
+            } catch let error as NSError {
+                print("Coud not fetch \(error), \(error.userInfo)")
+            }
+        }
+        
+        allEvents = events
         
     }
     
     public func deleteEvent(index: Int) {
         
         let context = viewContext
-        let parameterSet = events[index].value(forKey: R.KeyProperties.parameters) as? NSSet ?? NSSet()
+        let parameterSet = limitEvents[index].value(forKey: R.KeyProperties.parameters) as? NSSet ?? NSSet()
         
-        context.delete(events[index])
-        events.remove(at: index)
+        context.delete(limitEvents[index])
+        limitEvents.remove(at: index)
         
         // remove parameters of event
         for parameter in parameterSet {

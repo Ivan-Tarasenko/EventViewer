@@ -157,7 +157,7 @@ class EventsListViewController: UITableViewController {
         delegate.onTapCell = { [weak self] index in
             guard let self else { return }
             
-            guard !self.viewModel.allEvents.isEmpty else { return }
+            guard !self.viewModel.limitAllEvents.isEmpty else { return }
             
             let detailVC = DetailEventViewController(
                 dataSource: DetailEventDataSource(),
@@ -180,10 +180,10 @@ class EventsListViewController: UITableViewController {
         delegate.onScrollAction = { [weak self] in
             guard let self else { return }
             
-            self.eventManager.getEvents(n: self.countLoadData)
-            self.viewModel.allEvents = self.eventManager.events
+            self.eventManager.getLimitEvents(n: self.countLoadData)
+            self.viewModel.limitAllEvents = self.eventManager.limitEvents
             
-            if self.countLoadData < self.viewModel.allEvents.count {
+            if self.countLoadData < self.viewModel.limitAllEvents.count {
                 self.countLoadData += 5
                 self.tableView.reloadData()
             }
@@ -203,17 +203,14 @@ class EventsListViewController: UITableViewController {
 extension EventsListViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if !searchText.isEmpty {
-            viewModel.search(searchText: searchText)
-            tableView.reloadData()
-        } else {
-            reloadData()
-        }
-        
+        viewModel.search(searchText: searchText)
+        tableView.reloadData()
     }
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        reloadData()
-    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        eventManager.getEvents()
+       }
+    
     
     private func setupSearchController() {
         navigationItem.hidesSearchBarWhenScrolling = false

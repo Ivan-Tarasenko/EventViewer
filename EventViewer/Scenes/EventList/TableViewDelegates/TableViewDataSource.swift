@@ -12,10 +12,10 @@ final class TableViewDataSource: NSObject, UITableViewDataSource {
     var viewModel: EventListModelProtorol!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if viewModel.allEvents.isEmpty {
+        if viewModel.limitAllEvents.isEmpty {
             return 1
         } else {
-            return viewModel.allEvents.count
+            return viewModel.limitAllEvents.count
         }
     }
     
@@ -29,7 +29,7 @@ final class TableViewDataSource: NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+        
         if indexPath.row > 0 {
             if editingStyle == .delete {
                 viewModel.deleteEvent(index: indexPath.row)

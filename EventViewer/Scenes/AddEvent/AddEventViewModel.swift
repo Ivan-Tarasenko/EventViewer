@@ -60,7 +60,6 @@ final class AddEventViewModel: AddEventModelProtocol {
         let date = dateEvent ?? Date()
         let parameter = parameter()
         
-        print(parameter)
         return Event(id: id, date: date, parameters: parameter)
     }
     

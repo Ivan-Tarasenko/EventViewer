@@ -65,17 +65,17 @@ final class DetailEventViewModel: DetailEventModelProtocol {
     }
     
     private func getParaneterOfEvent(index: Int) {
-        guard !eventManager.events.isEmpty else { return }
+        guard !eventManager.limitEvents.isEmpty else { return }
         
         var id: String?
         var date: String?
         var eventParameter: EntityParameter?
         
-        if let idEvent = eventManager.events[index].value(forKey: R.KeyProperties.id) as? String {
+        if let idEvent = eventManager.limitEvents[index].value(forKey: R.KeyProperties.id) as? String {
             id = idEvent
         }
         
-        if let createAt = eventManager.events[index].value(forKey: R.KeyProperties.createAt) as? Date {
+        if let createAt = eventManager.limitEvents[index].value(forKey: R.KeyProperties.createAt) as? Date {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
             let timeString = dateFormatter.string(from: createAt)
@@ -83,7 +83,7 @@ final class DetailEventViewModel: DetailEventModelProtocol {
         }
         
         
-        if let parameters = eventManager.events[index].value(forKey: R.KeyProperties.parameters) as? Set<DBParameter> {
+        if let parameters = eventManager.limitEvents[index].value(forKey: R.KeyProperties.parameters) as? Set<DBParameter> {
             
             for parameter in parameters {
                 

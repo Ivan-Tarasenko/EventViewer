@@ -10,7 +10,7 @@ import CoreData
 
 protocol EventListModelProtorol: AnyObject {
     
-    var allEvents: [NSManagedObject] { get set }
+    var limitAllEvents: [NSManagedObject] { get set }
     
     func eventID(index: Int) -> String?
     func eventDate(index: Int) -> String?
@@ -24,20 +24,20 @@ final class EventListViewModel: EventListModelProtorol {
     
     let eventManager: EventManager?
     
-    var allEvents: [NSManagedObject] = []
+    var limitAllEvents: [NSManagedObject] = []
     
     init(eventManager: EventManager) {
         self.eventManager = eventManager
     }
     
     func eventID(index: Int) -> String? {
-        guard !allEvents.isEmpty else { return R.ErrorTitle.noEvent }
-        return allEvents[index].value(forKey: R.KeyProperties.id) as? String
+        guard !limitAllEvents.isEmpty else { return R.ErrorTitle.noEvent }
+        return limitAllEvents[index].value(forKey: R.KeyProperties.id) as? String
     }
     
     func eventDate(index: Int) -> String? {
-        guard !allEvents.isEmpty else { return "00/00/0000 00:00" }
-        guard let eventDate = allEvents[index].value(forKey: R.KeyProperties.createAt) as? Date else { return "00/00/0000 00:00" }
+        guard !limitAllEvents.isEmpty else { return "00/00/0000 00:00" }
+        guard let eventDate = limitAllEvents[index].value(forKey: R.KeyProperties.createAt) as? Date else { return "00/00/0000 00:00" }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
         let timeString = dateFormatter.string(from: eventDate)
@@ -46,25 +46,28 @@ final class EventListViewModel: EventListModelProtorol {
     
     func reloadData(completion: @escaping () -> Void) {
         guard let eventManager = eventManager else { return }
-        eventManager.getEvents()
-        allEvents = eventManager.events
+        eventManager.getLimitEvents()
+        limitAllEvents = eventManager.limitEvents
         completion()
     }
     
     func deleteEvent(index: Int) {
-        guard !allEvents.isEmpty else { return }
+        guard !limitAllEvents.isEmpty else { return }
         guard let eventManager = eventManager else { return }
         eventManager.deleteEvent(index: index)
-        allEvents.remove(at: index)
+        limitAllEvents.remove(at: index)
+    }
+    
+    // MARK: - Search methods
+    
+    func getAllEvents() {
+        eventManager?.getEvents()
     }
     
     func search(searchText: String) {
-        
-        for (index, event) in allEvents.enumerated() where
-        event.value(forKey: R.KeyProperties.id) as? String ~= searchText {
+        if let filteredEvents = eventManager?.allEvents.filter({ ($0.value(forKey: R.KeyProperties.id) as? String)!.lowercased().contains(searchText.lowercased()) }) {
             
-            let removeItem = allEvents.remove(at: index)
-            allEvents.insert(removeItem, at: 0)
+            limitAllEvents = filteredEvents
         }
     }
 }
